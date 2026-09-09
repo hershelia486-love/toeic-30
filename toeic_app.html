@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>TOEIC 30 — 380에서 920으로</title>
+<style>
+  :root{
+    --paper: #EDEAE1;
+    --card: #F7F5EF;
+    --ink: #1C2B44;
+    --pencil: #5C594E;
+    --pencil-light: #8A8677;
+    --rule: #CFC8B8;
+    --rule-strong: #A79F8A;
+    --red: #A63D2F;
+    --green: #3C6E58;
+    --ochre: #B9822E;
+    --serif: Georgia, 'Iowan Old Style', 'Nanum Myeongjo', 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  button{
+    -webkit-appearance:none;
+    appearance:none;
+    font-family:inherit;
+    background-image:none;
+    box-shadow:none;
+  }
+  html,body{margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:var(--sans);}
+  body{
+    padding-bottom: 76px;
+    min-height:100vh;
+  }
+  .wrap{max-width:480px; margin:0 auto; position:relative;}
+
+  /* ---- Header: admission-ticket strip ---- */
+  .ticket-header{
+    background:var(--ink);
+    color:var(--paper);
+    padding:18px 20px 16px;
+    position:relative;
+    border-bottom: 3px double var(--ochre);
+  }
+  .ticket-header .top-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+  }
+  .ticket-header .brand{
+    font-family:var(--serif);
+    font-size:20px;
+    letter-spacing:0.5px;
+  }
+  .ticket-header .brand small{
+    display:block;
+    font-family:var(--sans);
+    font-size:11px;
+    color:#C7BFA8;
+    margin-top:2px;
+    letter-spacing:0.3px;
+  }
+  .ticket-header .day-count{
+    font-family:var(--mono);
+    font-size:22px;
+    text-align:right;
+  }
+  .ticket-header .day-count .of{
+    font-size:13px;
+    color:#C7BFA8;
+  }
+  .progress-rule{
+    margin-top:12px;
+    height:3px;
+    background:rgba(255,255,255,0.18);
+    position:relative;
+    overflow:hidden;
+  }
+  .progress-rule .fill{
+    position:absolute; left:0; top:0; bottom:0;
+    background:var(--ochre);
+    width:0%;
+    transition:width .3s ease;
+  }
+
+  main{padding:16px 16px 8px;}
+
+  h2.section-title{
+    font-family:var(--serif);
+    font-size:19px;
+    margin:4px 0 14px;
+    color:var(--ink);
+    border-bottom:1px solid var(--rule);
+    padding-bottom:8px;
+  }
+
+  /* ---- Day grid (schedule) ---- */
+  .day-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .day-tile{
+    aspect-ratio:1;
+    background:var(--card);
+    border:1px solid var(--rule);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--mono);
+    cursor:pointer;
+    position:relative;
+  }
+  .day-tile .num{font-size:15px; font-weight:600;}
+  .day-tile .tag{font-size:8px; font-family:var(--sans); color:var(--pencil-light); margin-top:2px;}
+  .day-tile.done{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+  .day-tile.done .tag{color:#C7BFA8;}
+  .day-tile.today{border:2px solid var(--ochre);}
+  .day-tile.review{border-style:dashed;}
+  .day-tile.exam{border-color:var(--red);}
+  .day-tile:active{opacity:0.7;}
+
+  .start-prompt{
+    background:var(--card);
+    border:1px solid var(--rule);
+    padding:24px 18px;
+    text-align:center;
+    margin-bottom:20px;
+  }
+  .start-prompt p{color:var(--pencil); font-size:14px; line-height:1.6; margin:0 0 16px;}
+
+  /* ---- Buttons ---- */
+  .btn{
+    display:inline-block;
+    font-family:var(--sans);
+    font-size:14px;
+    font-weight:700;
+    padding:12px 20px;
+    background:#2255C7 !important;
+    color:#FFFFFF !important;
+    background-image:none !important;
+    box-shadow:none !important;
+    text-shadow:none !important;
+    border:none !important;
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    cursor:pointer;
+    text-align:center;
+    -webkit-text-fill-color:#FFFFFF;
+  }
+  .btn:active{opacity:0.75;}
+  .btn.outline{background:#FFFFFF !important; color:#2255C7 !important; border:2px solid #2255C7 !important; -webkit-text-fill-color:#2255C7;}
+  .btn.outline.red{color:#C0392B !important; border-color:#C0392B !important;}
+  .btn.red{background:#C0392B !important; color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF;}
+  .btn.green{background:#1E8A5F !important; color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF;}
+  .btn.block{display:block; width:100%;}
+  .btn.small{padding:8px 12px; font-size:12.5px;}
+  .btn:disabled{opacity:0.4; cursor:default;}
+
+  /* ---- Card / section blocks ---- */
+  .block{
+    background:var(--card);
+    border:1px solid var(--rule);
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .block .label{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:1px;
+    color:var(--pencil-light);
+    margin-bottom:8px;
+    text-transform:uppercase;
+  }
+  .theme-line{font-family:var(--serif); font-size:17px; margin-bottom:2px;}
+  .grammar-line{font-size:12.5px; color:var(--red);}
+
+  /* ---- Vocab card ---- */
+  .vocab-item{
+    border-bottom:1px solid var(--rule);
+    padding:12px 0;
+  }
+  .vocab-item:last-child{border-bottom:none;}
+  .vocab-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+  .vocab-word{font-family:var(--serif); font-size:17px; font-weight:700;}
+  .vocab-pos{font-size:11px; color:var(--pencil-light); font-style:italic;}
+  .vocab-meaning{font-size:14px; color:var(--ink); margin-left:auto;}
+  .vocab-colloc{font-size:12.5px; color:var(--green); margin-top:4px;}
+  .vocab-tip{font-size:12.5px; color:var(--ochre); margin-top:3px;}
+  .vocab-example{font-size:12.5px; color:var(--pencil); margin-top:4px; font-style:italic;}
+  .vocab-mark{display:flex; gap:6px; margin-top:8px;}
+
+  /* ---- Flashcard (vocab study screen) ---- */
+  .flashcard{
+    background:var(--card);
+    border:1px solid var(--rule);
+    min-height:220px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px 18px;
+    cursor:pointer;
+    position:relative;
+  }
+  .flashcard .fc-word{font-family:var(--serif); font-size:30px; font-weight:700;}
+  .flashcard .fc-pos{font-size:12px; color:var(--pencil-light); margin-top:4px;}
+  .flashcard .fc-hint{font-size:11px; color:var(--pencil-light); position:absolute; bottom:10px;}
+  .flashcard .fc-back{display:none; width:100%;}
+  .flashcard.flipped .fc-front{display:none;}
+  .flashcard.flipped .fc-back{display:block;}
+  .fc-meaning{font-size:20px; font-weight:700; margin-bottom:10px;}
+  .fc-colloc{font-size:14px; color:var(--green); margin-bottom:6px;}
+  .fc-tip{font-size:13px; color:var(--ochre); margin-bottom:6px; line-height:1.5;}
+  .fc-example{font-size:13px; color:var(--pencil); font-style:italic;}
+  .fc-controls{display:flex; gap:10px; margin-top:16px;}
+  .fc-progress{text-align:center; font-family:var(--mono); font-size:12px; color:var(--pencil-light); margin-bottom:10px;}
+
+  /* ---- Questions ---- */
+  .q-block{margin-bottom:16px;}
+  .q-script{
+    font-size:13.5px;
+    line-height:1.7;
+    white-space:pre-line;
+    background:var(--paper);
+    border-left:3px solid var(--rule-strong);
+    padding:10px 12px;
+    margin-bottom:10px;
+    color:var(--ink);
+  }
+  .q-passage{
+    font-size:13.5px;
+    line-height:1.7;
+    background:var(--paper);
+    border-left:3px solid var(--rule-strong);
+    padding:10px 12px;
+    margin-bottom:10px;
+  }
+  .q-sentence{font-size:14px; margin-bottom:10px; line-height:1.6;}
+  .q-text{font-size:14px; font-weight:600; margin-bottom:8px;}
+  .choices{display:flex; flex-direction:column; gap:6px;}
+  .choice{
+    border:1px solid var(--rule);
+    padding:9px 12px;
+    font-size:13.5px;
+    cursor:pointer;
+    background:var(--card);
+  }
+  .choice:active{background:var(--paper);}
+  .choice.correct{border-color:var(--green); background:#E7F0EA; color:var(--green); font-weight:600;}
+  .choice.wrong{border-color:var(--red); background:#F5E7E4; color:var(--red); font-weight:600;}
+  .choice.disabled{pointer-events:none;}
+  .q-explain{
+    margin-top:8px;
+    font-size:12.5px;
+    color:var(--pencil);
+    background:var(--paper);
+    padding:8px 10px;
+    border-left:2px solid var(--ochre);
+    display:none;
+  }
+  .q-explain.show{display:block;}
+  .save-mistake-btn{margin-top:8px;}
+
+  /* ---- Timer (mock exam) ---- */
+  .timer-display{
+    text-align:center;
+    padding:30px 10px;
+    background:var(--ink);
+    color:var(--paper);
+    margin-bottom:16px;
+  }
+  .timer-display .phase{font-size:12px; color:#C7BFA8; letter-spacing:1px;}
+  .timer-display .time{font-family:var(--mono); font-size:52px; margin:8px 0;}
+  .timer-display .time.warn{color:#E8B4A8;}
+
+  /* ---- Mistake notebook ---- */
+  .filter-row{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;}
+  .filter-chip{
+    font-size:11.5px;
+    padding:5px 10px;
+    border:1px solid var(--rule-strong);
+    color:var(--pencil);
+    cursor:pointer;
+    background:var(--card);
+  }
+  .filter-chip.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+  .mistake-card{
+    background:var(--card);
+    border:1px solid var(--rule);
+    padding:12px 14px;
+    margin-bottom:10px;
+  }
+  .mistake-grid{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    row-gap:6px; column-gap:10px;
+    font-size:12.5px;
+  }
+  .mistake-grid dt{color:var(--pencil-light); font-family:var(--mono); font-size:10px; text-transform:uppercase; align-self:start; padding-top:1px;}
+  .mistake-grid dd{margin:0; color:var(--ink); line-height:1.5;}
+  .mistake-type-tag{
+    display:inline-block;
+    font-size:10.5px;
+    background:var(--ochre);
+    color:#fff;
+    padding:2px 7px;
+  }
+  .top-types{
+    background:var(--card);
+    border:1px solid var(--rule);
+    padding:14px;
+    margin-bottom:16px;
+  }
+  .top-types .label{margin-bottom:10px;}
+  .top-type-row{display:flex; justify-content:space-between; font-size:13.5px; padding:5px 0; border-bottom:1px solid var(--rule);}
+  .top-type-row:last-child{border-bottom:none;}
+  .top-type-row .count{font-family:var(--mono); color:var(--red);}
+
+  .empty-state{
+    text-align:center;
+    color:var(--pencil-light);
+    font-size:13.5px;
+    padding:40px 16px;
+    line-height:1.6;
+  }
+
+  /* ---- Bottom nav ---- */
+  .bottom-nav{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    background:var(--ink);
+    display:flex;
+    max-width:480px;
+    margin:0 auto;
+    border-top:1px solid #33456A;
+  }
+  .nav-btn{
+    flex:1;
+    text-align:center;
+    padding:11px 4px 9px;
+    color:#9AA6BE;
+    font-size:11px;
+    background:none;
+    border:none;
+    font-family:var(--sans);
+    cursor:pointer;
+  }
+  .nav-btn .icon{display:block; font-size:18px; margin-bottom:3px;}
+  .nav-btn.active{color:var(--paper);}
+  .nav-btn.active .icon{color:var(--ochre);}
+
+  .day-detail-back{
+    font-size:13px; color:var(--pencil); margin-bottom:12px; cursor:pointer; display:inline-block;
+  }
+
+  select, input[type=date]{
+    font-family:var(--sans);
+    font-size:14px;
+    padding:8px 10px;
+    border:1px solid var(--rule-strong);
+    background:var(--card);
+    color:var(--ink);
+    width:100%;
+    margin-bottom:10px;
+  }
+  textarea{
+    font-family:var(--sans);
+    font-size:13.5px;
+    padding:8px 10px;
+    border:1px solid var(--rule-strong);
+    background:#fff;
+    color:var(--ink);
+    width:100%;
+    resize:vertical;
+    min-height:50px;
+  }
+  label.form-label{font-size:11.5px; color:var(--pencil-light); display:block; margin-bottom:4px; text-transform:uppercase; font-family:var(--mono);}
+  .form-group{margin-bottom:12px;}
+
+  .speak-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:26px; height:26px;
+    border:1px solid var(--rule-strong);
+    background:var(--paper);
+    color:var(--ink);
+    font-size:13px;
+    cursor:pointer;
+    flex-shrink:0;
+    -webkit-appearance:none;
+    appearance:none;
+    padding:0;
+  }
+  .speak-btn:active{background:var(--ochre); color:#fff; border-color:var(--ochre);}
+  .speak-row{display:flex; align-items:center; gap:8px;}
+  .speak-inline{margin-left:6px;}
+
+  .part-divider{
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:1.5px;
+    color:var(--pencil-light);
+    text-transform:uppercase;
+    margin:20px 0 10px;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:4px;
+  }
+</style>
+</head>
+<body>
+<noscript>
+  <div style="max-width:480px;margin:40px auto;padding:24px;background:#F7F5EF;border:2px solid #A63D2F;color:#1C2B44;font-family:-apple-system,sans-serif;text-align:center;line-height:1.7;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:10px;">⚠️ 미리보기 화면입니다</div>
+    <div style="font-size:14px;">
+      지금 이 화면은 자바스크립트가 꺼진 미리보기예요.<br>
+      오른쪽 위 공유(⬆️) 버튼을 눌러<br>
+      <b>"Safari로 열기"</b>를 선택해주세요.
+    </div>
+  </div>
+</noscript>
+<div class="wrap">
+
+  <div class="ticket-header">
+    <div class="top-row">
+      <div class="brand">TOEIC 30<small>380 → 920 독학 프로젝트</small></div>
+      <div class="day-count" id="hdrDayCount">–<span class="of"> / 30</span></div>
+    </div>
+    <div class="progress-rule"><div class="fill" id="hdrProgress"></div></div>
+  </div>
+
+  <main id="app"></main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-tab="schedule"><span class="icon">▦</span>스케줄</button>
+    <button class="nav-btn" data-tab="exam"><span class="icon">◷</span>모의고사</button>
+    <button class="nav-btn" data-tab="mistakes"><span class="icon">✕</span>오답노트</button>
+    <button class="nav-btn" data-tab="vocab"><span class="icon">◆</span>단어</button>
+  </nav>
+
+</div>
+
+<script>
+const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품사 자리 - 명사", "vocab": [{"word": "colleague", "pos": "n.", "meaning": "동료", "collocation": "work with a colleague", "memory_tip": "col(함께)+league(리그) → 함께 뛰는 동료", "example": "She discussed the project with her colleague."}, {"word": "deadline", "pos": "n.", "meaning": "마감일", "collocation": "meet a deadline / miss a deadline", "memory_tip": "dead(끝)+line(선) → 넘으면 끝나는 선", "example": "The deadline for the report is Friday."}, {"word": "submit", "pos": "v.", "meaning": "제출하다", "collocation": "submit a report/application", "memory_tip": "sub(아래)+mit(보내다) → 상부에 아래에서 올려보내다", "example": "Please submit your application by noon."}, {"word": "attach", "pos": "v.", "meaning": "첨부하다", "collocation": "attach a file to an email", "memory_tip": "at(붙다)+tach(고정) → 딱 붙여 고정하다", "example": "I attached the file to the email."}, {"word": "supervisor", "pos": "n.", "meaning": "상사, 감독자", "collocation": "report to a supervisor", "memory_tip": "super(위에서)+vise(보다) → 위에서 지켜보는 사람", "example": "Ask your supervisor for approval first."}, {"word": "revise", "pos": "v.", "meaning": "수정하다", "collocation": "revise a plan/document", "memory_tip": "re(다시)+vise(보다) → 다시 보고 고치다", "example": "We need to revise the budget plan."}, {"word": "efficient", "pos": "adj.", "meaning": "효율적인", "collocation": "an efficient system/way", "memory_tip": "ef(밖으로)+fic(만들다) → 결과를 잘 만들어내는", "example": "This is a more efficient way to work."}, {"word": "approval", "pos": "n.", "meaning": "승인", "collocation": "get/receive approval", "memory_tip": "ap(~에)+prove(증명하다) → 옳다고 증명받음", "example": "The project needs management approval."}, {"word": "workload", "pos": "n.", "meaning": "업무량", "collocation": "heavy workload / reduce workload", "memory_tip": "work+load(짐) → 짊어진 업무의 짐", "example": "Her workload increased after the promotion."}, {"word": "assignment", "pos": "n.", "meaning": "업무, 배정", "collocation": "complete an assignment", "memory_tip": "assign(할당하다)+ment(명사화) → 할당된 것", "example": "He finished the assignment ahead of schedule."}, {"word": "cooperate", "pos": "v.", "meaning": "협력하다", "collocation": "cooperate with a team", "memory_tip": "co(함께)+operate(작동하다) → 함께 작동하다", "example": "Both teams cooperated to finish the project."}, {"word": "productivity", "pos": "n.", "meaning": "생산성", "collocation": "improve productivity", "memory_tip": "produce(생산)+tivity(명사화) → 생산해내는 능력", "example": "New tools boosted overall productivity."}, {"word": "priority", "pos": "n.", "meaning": "우선순위", "collocation": "top priority / set priorities", "memory_tip": "prior(앞선)+ity(명사화) → 앞에 두는 것", "example": "Customer satisfaction is our top priority."}, {"word": "delegate", "pos": "v.", "meaning": "위임하다", "collocation": "delegate a task", "memory_tip": "de(아래로)+leg(보내다) → 아래로 일을 보내다", "example": "Good managers delegate tasks effectively."}, {"word": "streamline", "pos": "v.", "meaning": "간소화하다", "collocation": "streamline a process", "memory_tip": "stream(흐름)+line(선) → 흐름을 매끄러운 선으로", "example": "The new software streamlined our workflow."}, {"word": "outcome", "pos": "n.", "meaning": "결과", "collocation": "a positive/desired outcome", "memory_tip": "out(밖으로)+come(나오다) → 밖으로 나온 결과", "example": "The meeting produced a positive outcome."}, {"word": "correspond", "pos": "v.", "meaning": "일치하다, 상응하다", "collocation": "correspond with a record", "memory_tip": "cor(함께)+respond(응답하다) → 서로 맞아떨어짐", "example": "The invoice numbers correspond with the shipment."}, {"word": "coordinate", "pos": "v.", "meaning": "조율하다", "collocation": "coordinate a schedule", "memory_tip": "co(함께)+ordinate(정렬하다) → 함께 정리함", "example": "She coordinates schedules for the whole team."}, {"word": "designate", "pos": "v.", "meaning": "지정하다", "collocation": "designate a leader", "memory_tip": "de(강조)+sign(표시하다) → 확실히 표시해 정함", "example": "He was designated as the project lead."}, {"word": "consolidate", "pos": "v.", "meaning": "통합하다", "collocation": "consolidate reports", "memory_tip": "con(함께)+solid(단단한) → 단단히 하나로 합침", "example": "We consolidated all reports into one file."}, {"word": "implement", "pos": "v.", "meaning": "시행하다", "collocation": "implement a policy", "memory_tip": "im(안에)+ple(채우다) → 실제로 채워 넣어 실행함", "example": "The new policy will be implemented soon."}, {"word": "oversee", "pos": "v.", "meaning": "감독하다", "collocation": "oversee a project", "memory_tip": "over(위에서)+see(보다) → 위에서 지켜봄", "example": "She oversees the entire marketing team."}, {"word": "clerical", "pos": "adj.", "meaning": "사무의", "collocation": "clerical work", "memory_tip": "clerk(사무원)+ical", "example": "The clerical staff handle filing and records."}, {"word": "designated", "pos": "adj.", "meaning": "지정된", "collocation": "a designated area", "memory_tip": "designate(지정하다)+ed", "example": "Smoking is allowed only in designated areas."}, {"word": "routine", "pos": "n./adj.", "meaning": "일상적인 (업무)", "collocation": "a routine task", "memory_tip": "route(경로)와 관련 → 늘 다니는 길처럼 반복되는 일", "example": "Filing reports is a routine task."}], "lc_dialogue": {"script": "A: Did you submit the report to Mr. Kim yet?\nB: Not yet. I'm still revising the last section.\nA: The deadline is this afternoon, so please hurry.\nB: I'll attach it and send it within the hour.", "questions": [{"q": "What is B currently doing?", "choices": ["Sending an email", "Revising a report", "Meeting Mr. Kim", "Setting a deadline"], "answer": "Revising a report"}, {"q": "When will B send the report?", "choices": ["Tomorrow", "Next week", "Within the hour", "This morning"], "answer": "Within the hour"}]}, "part5": [{"sentence": "All employees must submit their expense ___ by the 5th of each month.", "choices": ["reports", "reported", "reporting", "reportedly"], "answer": "reports", "grammar_point": "명사자리: 관사(their)+형용사(expense)+빈칸 → 명사"}, {"sentence": "The manager gave her ___ to the new marketing plan.", "choices": ["approve", "approval", "approving", "approved"], "answer": "approval", "grammar_point": "명사자리: 소유격(her)+빈칸 → 명사"}, {"sentence": "Working with an efficient team helps improve overall ___.", "choices": ["produce", "product", "productivity", "productive"], "answer": "productivity", "grammar_point": "명사자리: 형용사(overall)+빈칸 → 명사"}], "part7": {"passage": "Notice to All Staff: Starting Monday, all reports must be submitted through the new online system instead of email. Please contact IT support if you have trouble accessing the system.", "questions": [{"q": "What is the notice mainly about?", "choices": ["A new office location", "A change in submission method", "A holiday schedule", "A new supervisor"], "answer": "A change in submission method", "paraphrase_note": "지문의 'submitted through the new online system instead of email' → 선지의 'a change in submission method'로 패러프레이징됨"}, {"q": "Who should employees contact for help?", "choices": ["Their supervisor", "The marketing team", "IT support", "Human Resources"], "answer": "IT support", "paraphrase_note": "지문의 'contact IT support if you have trouble' → 선지에서 그대로 핵심어(IT support) 재사용, 함정 없이 직접 매칭되는 유형"}]}}, "day02": {"theme": "회의/일정", "grammar_point": "품사 자리 - 동사", "vocab": [{"word": "agenda", "pos": "n.", "meaning": "안건, 의제", "collocation": "set/follow an agenda", "memory_tip": "ag(행하다)+enda(할 일들) → 해야 할 일 목록", "example": "The agenda includes three main topics."}, {"word": "postpone", "pos": "v.", "meaning": "연기하다", "collocation": "postpone a meeting", "memory_tip": "post(뒤에)+pone(놓다) → 뒤로 놓다=미루다", "example": "The meeting was postponed until next week."}, {"word": "attendee", "pos": "n.", "meaning": "참석자", "collocation": "all attendees", "memory_tip": "attend(참석하다)+ee(당하는 사람) → 참석하는 사람", "example": "All attendees must sign in at the desk."}, {"word": "reschedule", "pos": "v.", "meaning": "일정을 변경하다", "collocation": "reschedule an appointment", "memory_tip": "re(다시)+schedule(일정) → 일정을 다시 짜다", "example": "We had to reschedule the interview."}, {"word": "confirm", "pos": "v.", "meaning": "확인하다", "collocation": "confirm attendance/a reservation", "memory_tip": "con(완전히)+firm(단단하게) → 확실하게 굳히다", "example": "Please confirm your attendance by Friday."}, {"word": "venue", "pos": "n.", "meaning": "장소", "collocation": "change the venue", "memory_tip": "come(오다)의 어원 venire → 사람들이 오는 곳", "example": "The venue for the conference changed."}, {"word": "punctual", "pos": "adj.", "meaning": "시간을 엄수하는", "collocation": "be punctual for a meeting", "memory_tip": "punct(점, 정확한 지점) → 정확한 시점을 지키는", "example": "He is always punctual for meetings."}, {"word": "minutes", "pos": "n.", "meaning": "회의록", "collocation": "take/record the minutes", "memory_tip": "minute(분) → 분 단위로 기록한 것", "example": "She took the minutes of the meeting."}, {"word": "convene", "pos": "v.", "meaning": "소집하다", "collocation": "convene a meeting", "memory_tip": "con(함께)+vene(오다) → 함께 오게 하다", "example": "The board will convene next Monday."}, {"word": "proceed", "pos": "v.", "meaning": "진행하다", "collocation": "proceed with a plan", "memory_tip": "pro(앞으로)+ceed(가다) → 앞으로 나아가다", "example": "Let's proceed with the next item on the agenda."}, {"word": "briefing", "pos": "n.", "meaning": "브리핑, 요약보고", "collocation": "attend a briefing", "memory_tip": "brief(짧은)+ing → 짧게 요약해 알려줌", "example": "The daily briefing starts at 9 a.m."}, {"word": "adjourn", "pos": "v.", "meaning": "휴회하다, 끝내다", "collocation": "adjourn a meeting", "memory_tip": "ad(~쪽으로)+journ(하루, day) → 다음 날로 미루다", "example": "The meeting was adjourned until further notice."}, {"word": "consensus", "pos": "n.", "meaning": "합의", "collocation": "reach a consensus", "memory_tip": "con(함께)+sens(느끼다) → 함께 같은 걸 느낌", "example": "The team reached a consensus on the budget."}, {"word": "overdue", "pos": "adj.", "meaning": "기한이 지난", "collocation": "an overdue task", "memory_tip": "over(넘어서)+due(마땅한 날짜) → 정해진 날짜를 넘김", "example": "The project report is now overdue."}, {"word": "notify", "pos": "v.", "meaning": "통지하다", "collocation": "notify participants", "memory_tip": "not(알다)+ify(만들다) → 알게 만들다", "example": "We will notify all attendees of the change."}, {"word": "logistics", "pos": "n.", "meaning": "물류, 준비 실무", "collocation": "handle logistics", "memory_tip": "logi(계산하다)+stics → 세세하게 계산해 준비함", "example": "She handles the logistics for every event."}, {"word": "facilitate", "pos": "v.", "meaning": "촉진하다, 진행을 돕다", "collocation": "facilitate a discussion", "memory_tip": "facile(쉬운)+itate → 쉽게 되도록 도움", "example": "The moderator facilitated the discussion."}, {"word": "recap", "pos": "n./v.", "meaning": "요약(하다)", "collocation": "give a quick recap", "memory_tip": "re(다시)+cap(머리, 요점) → 요점을 다시 짚음", "example": "Let's do a quick recap before we start."}, {"word": "follow-up", "pos": "n./adj.", "meaning": "후속조치, 후속의", "collocation": "a follow-up meeting", "memory_tip": "follow(따르다)+up → 뒤이어 챙기는 것", "example": "We scheduled a follow-up meeting for Friday."}, {"word": "outline", "pos": "n./v.", "meaning": "개요(를 잡다)", "collocation": "outline the agenda", "memory_tip": "out(밖으로)+line(선) → 윤곽선을 그림", "example": "She outlined the main points of the plan."}, {"word": "deliberate", "pos": "v./adj.", "meaning": "숙고하다, 신중한", "collocation": "deliberate on a decision", "memory_tip": "de(강조)+liber(저울) → 신중히 저울질함", "example": "The board deliberated for an hour."}, {"word": "unanimous", "pos": "adj.", "meaning": "만장일치의", "collocation": "a unanimous decision", "memory_tip": "uni(하나)+animus(마음) → 마음이 하나로", "example": "The vote was unanimous."}, {"word": "preside", "pos": "v.", "meaning": "주재하다", "collocation": "preside over a meeting", "memory_tip": "pre(앞에)+side(앉다) → 앞자리에 앉아 이끌다", "example": "The chairperson presided over the meeting."}, {"word": "tentative", "pos": "adj.", "meaning": "잠정적인", "collocation": "a tentative schedule", "memory_tip": "tent(시도하다)+ative → 시도해보는 단계의", "example": "This is a tentative schedule, subject to change."}, {"word": "conclude", "pos": "v.", "meaning": "마치다, 결론짓다", "collocation": "conclude a meeting", "memory_tip": "con(함께)+clude(닫다) → 함께 마무리 지음", "example": "Let's conclude the meeting with a summary."}], "lc_dialogue": {"script": "A: Have you confirmed the venue for Thursday's meeting?\nB: Yes, it's booked, but I heard the meeting might be postponed.\nA: Really? Who told you that?\nB: Our supervisor mentioned it might move to next Monday.", "questions": [{"q": "What has B confirmed?", "choices": ["The agenda", "The venue", "The attendees", "The minutes"], "answer": "The venue"}, {"q": "What might happen to the meeting?", "choices": ["It will be canceled", "It will be postponed", "It will be shortened", "It will be recorded"], "answer": "It will be postponed"}]}, "part5": [{"sentence": "The board meeting has been ___ to next Tuesday due to a scheduling conflict.", "choices": ["postpone", "postponed", "postponing", "postponement"], "answer": "postponed", "grammar_point": "동사자리: has been + p.p. (수동태 완료형)"}, {"sentence": "Please ___ your seat before October 1 to guarantee a spot at the conference.", "choices": ["confirm", "confirmation", "confirmed", "confirming"], "answer": "confirm", "grammar_point": "동사자리: 명령문 Please + 동사원형"}, {"sentence": "All attendees ___ a copy of the agenda before the meeting began.", "choices": ["receive", "received", "receiving", "to receive"], "answer": "received", "grammar_point": "동사자리: 주어(attendees)+빈칸(본동사 필요) → 과거시제 동사"}], "part7": {"passage": "Meeting Update: The quarterly sales meeting originally scheduled for June 10 has been moved to June 14 at the same venue. Please review the attached agenda and confirm your attendance by June 8.", "questions": [{"q": "Why was this notice sent?", "choices": ["To cancel a meeting", "To announce a schedule change", "To introduce a new venue", "To request a report"], "answer": "To announce a schedule change", "paraphrase_note": "지문의 'has been moved to June 14' → 선지의 'a schedule change'로 패러프레이징. 'moved'가 곧 '변경'임을 캐치해야 함"}, {"q": "What should recipients do by June 8?", "choices": ["Submit a report", "Confirm attendance", "Book a venue", "Send an agenda"], "answer": "Confirm attendance", "paraphrase_note": "지문의 'confirm your attendance by June 8'가 선지에 그대로 반복됨 - 직접 매칭형"}]}}, "day03": {"theme": "이메일/커뮤니케이션", "grammar_point": "품사 자리 - 형용사", "vocab": [{"word": "inquiry", "pos": "n.", "meaning": "문의", "collocation": "make an inquiry", "memory_tip": "in(안으로)+quir(묻다) → 안으로 파고들어 묻다", "example": "We received an inquiry about our services."}, {"word": "respond", "pos": "v.", "meaning": "응답하다", "collocation": "respond to a request", "memory_tip": "re(다시)+spond(약속하다) → 답으로 약속하다", "example": "Please respond to the client as soon as possible."}, {"word": "notify", "pos": "v.", "meaning": "통지하다", "collocation": "notify customers", "memory_tip": "Day2 복습: not(알다)+ify", "example": "We will notify you of any changes."}, {"word": "recipient", "pos": "n.", "meaning": "수신자", "collocation": "the intended recipient", "memory_tip": "re(다시)+cip(받다) → 받는 쪽", "example": "The recipient did not open the email."}, {"word": "forward", "pos": "v.", "meaning": "전달하다", "collocation": "forward an email", "memory_tip": "for(앞으로)+ward(방향) → 앞으로 보내다", "example": "Could you forward this message to Sales?"}, {"word": "sincerely", "pos": "adv.", "meaning": "진심으로(맺음말)", "collocation": "sincerely yours", "memory_tip": "sincer(진실한)+ly → 진심을 담아", "example": "The letter ended with 'Sincerely, John'."}, {"word": "regarding", "pos": "prep.", "meaning": "~에 관하여", "collocation": "an email regarding X", "memory_tip": "regard(관련하다)+ing → 관련지어", "example": "I am writing regarding your recent order."}, {"word": "prompt", "pos": "adj.", "meaning": "신속한", "collocation": "a prompt response", "memory_tip": "prompt=즉각 튀어나오는", "example": "Thank you for your prompt response."}, {"word": "concise", "pos": "adj.", "meaning": "간결한", "collocation": "a concise summary", "memory_tip": "con(함께)+cise(자르다) → 불필요한 걸 잘라냄", "example": "Keep your email concise and clear."}, {"word": "courteous", "pos": "adj.", "meaning": "정중한", "collocation": "a courteous reply", "memory_tip": "court(궁정)+eous → 궁정에서처럼 예의바른", "example": "Staff should remain courteous at all times."}, {"word": "clarify", "pos": "v.", "meaning": "명확히 하다", "collocation": "clarify a point", "memory_tip": "clar(명확한)+ify(만들다) → 명확하게 만들다", "example": "Could you clarify what you mean?"}, {"word": "attachment", "pos": "n.", "meaning": "첨부파일", "collocation": "open an attachment", "memory_tip": "attach(붙이다)+ment → 붙인 것", "example": "Please see the attachment for details."}, {"word": "correspondence", "pos": "n.", "meaning": "서신, 연락", "collocation": "business correspondence", "memory_tip": "co(함께)+respond(답하다)+ence → 주고받는 서신", "example": "All correspondence is saved for records."}, {"word": "acknowledge", "pos": "v.", "meaning": "확인했음을 알리다", "collocation": "acknowledge receipt", "memory_tip": "ac(~에)+knowledge(앎) → 알고 있음을 인정하다", "example": "Please acknowledge receipt of this email."}, {"word": "informative", "pos": "adj.", "meaning": "유익한, 정보가 많은", "collocation": "an informative report", "memory_tip": "inform(알리다)+ative → 정보를 주는 성질의", "example": "The presentation was very informative."}, {"word": "urgent", "pos": "adj.", "meaning": "긴급한", "collocation": "an urgent matter", "memory_tip": "urge(재촉하다)+ent → 재촉할 만큼 급한", "example": "This is an urgent matter that needs attention."}, {"word": "cc (carbon copy)", "pos": "v./n.", "meaning": "참조로 보내다", "collocation": "cc a colleague", "memory_tip": "옛 복사지(carbon paper)에서 유래", "example": "Please cc me on that email."}, {"word": "draft", "pos": "n./v.", "meaning": "초안(을 작성하다)", "collocation": "draft an email", "memory_tip": "Day5 복습: draw(그리다)와 관련", "example": "I drafted a reply but haven't sent it yet."}, {"word": "elaborate", "pos": "v./adj.", "meaning": "자세히 설명하다, 정교한", "collocation": "elaborate on a point", "memory_tip": "e(밖으로)+labor(노력)+ate → 공들여 풀어냄", "example": "Could you elaborate on that point?"}, {"word": "misunderstanding", "pos": "n.", "meaning": "오해", "collocation": "clear up a misunderstanding", "memory_tip": "mis(잘못)+understanding(이해)", "example": "There was a misunderstanding about the date."}, {"word": "reply", "pos": "n./v.", "meaning": "답장(하다)", "collocation": "reply promptly", "memory_tip": "re(다시)+ply(접다,답하다)", "example": "Please reply by the end of the day."}, {"word": "disseminate", "pos": "v.", "meaning": "배포하다, 퍼뜨리다", "collocation": "disseminate information", "memory_tip": "dis(사방으로)+semin(씨앗) → 씨앗을 뿌리듯 퍼뜨림", "example": "The memo was disseminated to all staff."}, {"word": "confidential", "pos": "adj.", "meaning": "기밀의", "collocation": "confidential information", "memory_tip": "confide(비밀을 털어놓다)+ential", "example": "This document is strictly confidential."}, {"word": "brevity", "pos": "n.", "meaning": "간결함", "collocation": "for the sake of brevity", "memory_tip": "brief(짧은)+ity", "example": "For brevity, please summarize your points."}, {"word": "misinterpret", "pos": "v.", "meaning": "잘못 해석하다", "collocation": "misinterpret a message", "memory_tip": "mis(잘못)+interpret(해석하다)", "example": "The instructions were misinterpreted by staff."}], "lc_dialogue": {"script": "A: Did you respond to the client's inquiry yet?\nB: Not yet, but I'll notify her today.\nA: Could you also forward the email to the sales team?\nB: Sure, I'll do that right after lunch.", "questions": [{"q": "What does A ask B to do besides responding?", "choices": ["Call the client", "Forward an email", "Write a report", "Book a meeting"], "answer": "Forward an email"}, {"q": "When will B forward the email?", "choices": ["Before lunch", "After lunch", "Tomorrow morning", "Next week"], "answer": "After lunch"}]}, "part5": [{"sentence": "We received your ___ inquiry and will respond within two business days.", "choices": ["urgent", "urgently", "urgency", "urge"], "answer": "urgent", "grammar_point": "형용사자리: 관사(your... 실은 소유격)+빈칸+명사(inquiry) → 명사 수식 형용사"}, {"sentence": "Customers appreciate a ___ response to their questions.", "choices": ["prompt", "promptly", "promptness", "prompted"], "answer": "prompt", "grammar_point": "형용사자리: 관사(a)+빈칸+명사(response)"}, {"sentence": "Please keep your message ___ and to the point.", "choices": ["concise", "concisely", "conciseness", "concising"], "answer": "concise", "grammar_point": "형용사자리: keep+목적어(message)+목적격보어 → 형용사"}], "part7": {"passage": "Dear Ms. Lee, Thank you for your inquiry regarding our new product line. Attached please find the catalog and price list. If you have further questions, feel free to contact us. Sincerely, David Park.", "questions": [{"q": "What is attached to the email?", "choices": ["An invoice", "A catalog and price list", "A meeting agenda", "A job application"], "answer": "A catalog and price list", "paraphrase_note": "지문의 'Attached please find the catalog and price list'가 선지에 그대로 반복 - 직접 매칭형"}, {"q": "What is the purpose of this email?", "choices": ["To complain about a product", "To respond to an inquiry", "To request a refund", "To schedule a meeting"], "answer": "To respond to an inquiry", "paraphrase_note": "지문의 'Thank you for your inquiry' → 이 이메일 자체가 문의에 대한 '응답'임을 추론해야 하는 유형"}]}}, "day04": {"theme": "출장/여행", "grammar_point": "품사 자리 - 부사", "vocab": [{"word": "itinerary", "pos": "n.", "meaning": "여행 일정", "collocation": "a detailed itinerary", "memory_tip": "iter(길)+ary → 길을 따라가는 일정", "example": "The itinerary includes three cities."}, {"word": "reservation", "pos": "n.", "meaning": "예약", "collocation": "make a reservation", "memory_tip": "re(다시)+serve(보관하다) → 미리 챙겨 둠", "example": "I made a reservation for two nights."}, {"word": "departure", "pos": "n.", "meaning": "출발", "collocation": "departure time/gate", "memory_tip": "de(떠나서)+part(부분/떠나다) → 떠나감", "example": "The departure time is 9 a.m."}, {"word": "boarding", "pos": "n.", "meaning": "탑승", "collocation": "boarding pass/time", "memory_tip": "board(탑승하다)+ing → 탑승하는 행위", "example": "Boarding begins 30 minutes before departure."}, {"word": "luggage", "pos": "n.", "meaning": "수하물", "collocation": "check luggage", "memory_tip": "lug(끌다)+gage → 끌고 다니는 짐", "example": "Please check your luggage weight."}, {"word": "delay", "pos": "v./n.", "meaning": "지연(되다)", "collocation": "a flight delay", "memory_tip": "de(강조)+lay(놓다) → 자리에 계속 놓아둠=지체", "example": "The flight was delayed by an hour."}, {"word": "accommodate", "pos": "v.", "meaning": "수용하다", "collocation": "accommodate guests", "memory_tip": "ac(~에)+commode(편리한) → 편리하게 맞춰주다", "example": "The hotel can accommodate large groups."}, {"word": "voucher", "pos": "n.", "meaning": "상품권, 쿠폰", "collocation": "a meal voucher", "memory_tip": "vouch(보증하다)+er → 보증해주는 증서", "example": "She used a voucher for a free meal."}, {"word": "promptly", "pos": "adv.", "meaning": "즉시, 정각에", "collocation": "arrive promptly", "memory_tip": "prompt(신속한)+ly → 신속하게", "example": "The bus departs promptly at 8 a.m."}, {"word": "thoroughly", "pos": "adv.", "meaning": "철저하게", "collocation": "check thoroughly", "memory_tip": "thorough(철저한)+ly", "example": "Inspect the luggage thoroughly before departure."}, {"word": "directly", "pos": "adv.", "meaning": "직접적으로", "collocation": "fly directly", "memory_tip": "direct(직접의)+ly", "example": "The flight goes directly to Tokyo."}, {"word": "extensively", "pos": "adv.", "meaning": "광범위하게", "collocation": "travel extensively", "memory_tip": "extensive(광범위한)+ly", "example": "She has traveled extensively for work."}, {"word": "en route", "pos": "adv. phr.", "meaning": "도중에", "collocation": "en route to Seoul", "memory_tip": "프랑스어 유래: '길 위에서'", "example": "We stopped for coffee en route to the airport."}, {"word": "customs", "pos": "n.", "meaning": "세관", "collocation": "pass through customs", "memory_tip": "custom(관습)의 복수형이 세관 뜻으로도 쓰임", "example": "It took an hour to clear customs."}, {"word": "layover", "pos": "n.", "meaning": "경유", "collocation": "a two-hour layover", "memory_tip": "lay(눕다)+over → 잠시 머무름", "example": "We have a two-hour layover in Dubai."}, {"word": "punctuality", "pos": "n.", "meaning": "시간엄수", "collocation": "value punctuality", "memory_tip": "punctual(시간을 지키는)+ity", "example": "Airlines emphasize punctuality for departures."}, {"word": "connecting flight", "pos": "n.", "meaning": "연결편, 환승 비행기", "collocation": "catch a connecting flight", "memory_tip": "connect(연결하다)+flight", "example": "We have a tight connection for our connecting flight."}, {"word": "compensation", "pos": "n.", "meaning": "보상(금)", "collocation": "flight compensation", "memory_tip": "Day6 복습: com+pensate", "example": "Passengers received compensation for the delay."}, {"word": "itemize", "pos": "v.", "meaning": "항목별로 적다", "collocation": "itemize expenses", "memory_tip": "item(항목)+ize", "example": "Please itemize your travel expenses."}, {"word": "per diem", "pos": "n.", "meaning": "일일 경비, 일당", "collocation": "receive a per diem", "memory_tip": "라틴어 '하루당'", "example": "Employees receive a per diem for meals."}, {"word": "commute", "pos": "v./n.", "meaning": "통근(하다)", "collocation": "a long commute", "memory_tip": "com(함께)+mute(바꾸다) → 왕복을 반복함", "example": "Her daily commute takes an hour."}, {"word": "layover", "pos": "n.", "meaning": "경유", "collocation": "a short layover", "memory_tip": "Day4 복습: lay+over", "example": "We have a short layover in Frankfurt."}, {"word": "amenities", "pos": "n.", "meaning": "편의시설", "collocation": "hotel amenities", "memory_tip": "Day14 복습: amene(쾌적한)+ity", "example": "The hotel offers excellent amenities."}, {"word": "concierge", "pos": "n.", "meaning": "컨시어지, 안내 담당자", "collocation": "ask the concierge", "memory_tip": "프랑스어 '관리인'에서 유래", "example": "The concierge helped arrange transportation."}, {"word": "expedition", "pos": "n.", "meaning": "출장, 원정", "collocation": "a business expedition", "memory_tip": "ex(밖으로)+ped(발) → 밖으로 나가는 여정", "example": "The sales team returned from their expedition."}], "lc_dialogue": {"script": "A: What time is our departure tomorrow?\nB: The itinerary says 9 a.m., but boarding starts at 8:30.\nA: Did you confirm the hotel reservation?\nB: Yes, they can accommodate us for three nights.", "questions": [{"q": "What time does boarding start?", "choices": ["8:00", "8:30", "9:00", "9:30"], "answer": "8:30"}, {"q": "How many nights is the hotel reservation for?", "choices": ["Two", "Three", "Four", "Five"], "answer": "Three"}]}, "part5": [{"sentence": "Passengers should arrive ___ early because boarding begins 40 minutes before departure.", "choices": ["prompt", "promptly", "promptness", "prompter"], "answer": "promptly", "grammar_point": "부사자리: 빈칸+형용사(early) → early를 꾸미는 부사"}, {"sentence": "The flight was delayed ___ due to bad weather conditions.", "choices": ["significant", "significantly", "significance", "signify"], "answer": "significantly", "grammar_point": "부사자리: 동사(was delayed)를 꾸미는 부사"}, {"sentence": "The hotel can ___ accommodate groups of up to fifty guests.", "choices": ["easy", "easily", "ease", "easier"], "answer": "easily", "grammar_point": "부사자리: 조동사(can)+빈칸+동사(accommodate)"}], "part7": {"passage": "Travel Alert: Due to a technical issue, Flight 205 to Busan has been delayed by two hours. New departure time is 3:30 p.m. Passengers may use the attached voucher for a meal at any airport restaurant.", "questions": [{"q": "Why was the flight delayed?", "choices": ["Bad weather", "A technical issue", "A staff shortage", "An overbooking"], "answer": "A technical issue", "paraphrase_note": "지문 'Due to a technical issue'가 선지에 그대로 반복 - 직접 매칭형"}, {"q": "What can passengers do with the voucher?", "choices": ["Get a hotel room", "Buy a meal", "Upgrade their seat", "Check extra luggage"], "answer": "Buy a meal", "paraphrase_note": "지문의 'voucher for a meal' → 선지의 'Buy a meal'로 단순 재진술"}]}}, "day05": {"theme": "계약/법률", "grammar_point": "동사 시제 - 현재/과거/미래", "vocab": [{"word": "contract", "pos": "n.", "meaning": "계약(서)", "collocation": "sign a contract", "memory_tip": "con(함께)+tract(끌다) → 서로 당겨 맺은 약속", "example": "Both parties signed the contract."}, {"word": "clause", "pos": "n.", "meaning": "조항", "collocation": "a termination clause", "memory_tip": "close(닫다)와 어원 유사 → 문장을 닫는 절", "example": "Read the termination clause carefully."}, {"word": "obligation", "pos": "n.", "meaning": "의무", "collocation": "a legal obligation", "memory_tip": "ob(~에)+lig(묶다) → 묶여서 해야 하는 일", "example": "The company has an obligation to pay on time."}, {"word": "terminate", "pos": "v.", "meaning": "종료하다, 해지하다", "collocation": "terminate an agreement", "memory_tip": "termin(끝, terminal) → 끝내다", "example": "Either party may terminate the agreement."}, {"word": "comply", "pos": "v.", "meaning": "준수하다", "collocation": "comply with regulations", "memory_tip": "com(완전히)+ply(채우다) → 요구를 완전히 채우다", "example": "All vendors must comply with the policy."}, {"word": "breach", "pos": "n./v.", "meaning": "위반(하다)", "collocation": "breach of contract", "memory_tip": "break(깨다)와 관련 → 약속을 깸", "example": "This is a breach of contract."}, {"word": "negotiate", "pos": "v.", "meaning": "협상하다", "collocation": "negotiate terms", "memory_tip": "neg(부정)+otiate(여가) → 여가 없이 바쁘게 흥정함", "example": "They negotiated a lower price."}, {"word": "provision", "pos": "n.", "meaning": "규정, 조항", "collocation": "a provision requires X", "memory_tip": "pro(미리)+vision(봄) → 미리 대비해 정해둔 조항", "example": "The provision requires 30 days' notice."}, {"word": "liability", "pos": "n.", "meaning": "책임, 부채", "collocation": "legal liability", "memory_tip": "liable(책임 있는)+ity", "example": "The firm limited its liability in the contract."}, {"word": "enforce", "pos": "v.", "meaning": "집행하다, 시행하다", "collocation": "enforce a rule", "memory_tip": "en(만들다)+force(힘) → 힘을 가해 지키게 함", "example": "The new rule will be strictly enforced."}, {"word": "waiver", "pos": "n.", "meaning": "포기, 면제", "collocation": "sign a waiver", "memory_tip": "waive(포기하다)+r", "example": "Guests must sign a liability waiver."}, {"word": "amendment", "pos": "n.", "meaning": "수정(조항)", "collocation": "an amendment to the contract", "memory_tip": "amend(수정하다)+ment", "example": "An amendment was added last month."}, {"word": "jurisdiction", "pos": "n.", "meaning": "관할권", "collocation": "within the jurisdiction", "memory_tip": "juris(법)+diction(말하다) → 법을 말할 수 있는 범위", "example": "This falls under state jurisdiction."}, {"word": "binding", "pos": "adj.", "meaning": "구속력 있는", "collocation": "a legally binding agreement", "memory_tip": "bind(묶다)+ing → 묶어놓는=구속하는", "example": "The agreement is legally binding."}, {"word": "draft", "pos": "n./v.", "meaning": "초안(을 작성하다)", "collocation": "draft a contract", "memory_tip": "draw(그리다)와 관련 → 초벌로 그려본 것", "example": "The lawyer drafted the new contract."}, {"word": "stipulate", "pos": "v.", "meaning": "명시하다", "collocation": "the contract stipulates that", "memory_tip": "stipul(짚) → 짚을 꺾어 계약한 관습에서 유래, 명확히 정함", "example": "The contract stipulates a 30-day notice period."}, {"word": "party", "pos": "n.", "meaning": "(계약) 당사자", "collocation": "the contracting party", "memory_tip": "일상 'party'와 달리 법률 문서에서 '당사자'로 쓰임", "example": "Both parties agreed to the terms."}, {"word": "arbitration", "pos": "n.", "meaning": "중재", "collocation": "settle by arbitration", "memory_tip": "arbiter(중재자)+ation", "example": "Disputes will be settled through arbitration."}, {"word": "confidentiality", "pos": "n.", "meaning": "기밀유지", "collocation": "a confidentiality agreement", "memory_tip": "confidential(기밀의)+ity", "example": "The NDA ensures confidentiality."}, {"word": "indemnify", "pos": "v.", "meaning": "배상하다, 보상하다", "collocation": "indemnify a party", "memory_tip": "in(부정)+damn(손해) → 손해를 없애줌", "example": "The vendor agreed to indemnify the client."}, {"word": "void", "pos": "adj.", "meaning": "무효인", "collocation": "declare void", "memory_tip": "vac(비다)와 관련 → 효력이 빈 상태", "example": "The contract was declared void."}, {"word": "renewal", "pos": "n.", "meaning": "갱신", "collocation": "an automatic renewal", "memory_tip": "renew(갱신하다)+al", "example": "The lease includes an automatic renewal clause."}, {"word": "counterpart", "pos": "n.", "meaning": "상대방, 대응자", "collocation": "our counterpart", "memory_tip": "counter(대응)+part(부분) → 짝을 이루는 상대", "example": "She met with her counterpart at the firm."}, {"word": "legally binding", "pos": "adj. phr.", "meaning": "법적 구속력이 있는", "collocation": "a legally binding contract", "memory_tip": "legal(법적인)+binding(구속하는)", "example": "The agreement is legally binding on both sides."}, {"word": "litigation", "pos": "n.", "meaning": "소송", "collocation": "avoid litigation", "memory_tip": "litig(다투다)+ation", "example": "The company wanted to avoid litigation."}], "lc_dialogue": {"script": "A: Have you reviewed the contract's termination clause?\nB: Yes, it says either party can terminate with 30 days' notice.\nA: Good. Let's negotiate the price provision next.\nB: I'll set up a call with the client this week.", "questions": [{"q": "What does the termination clause require?", "choices": ["Immediate notice", "30 days' notice", "60 days' notice", "No notice"], "answer": "30 days' notice"}, {"q": "What will B do this week?", "choices": ["Sign the contract", "Set up a call", "Terminate the agreement", "Review a breach"], "answer": "Set up a call"}]}, "part5": [{"sentence": "All suppliers ___ with the new safety regulations by March of this year.", "choices": ["comply", "complied", "will comply", "have complied"], "answer": "will comply", "grammar_point": "동사시제: by March(미래 기한) → 미래시제"}, {"sentence": "Last year, the company ___ a new contract with its main supplier.", "choices": ["negotiates", "negotiated", "will negotiate", "is negotiating"], "answer": "negotiated", "grammar_point": "동사시제: Last year(과거 시간표현) → 과거시제"}, {"sentence": "Currently, the legal team ___ the amended clause for accuracy.", "choices": ["reviews", "reviewed", "is reviewing", "will review"], "answer": "is reviewing", "grammar_point": "동사시제: Currently(현재 진행 시점) → 현재진행형"}], "part7": {"passage": "Contract Amendment Notice: Section 4.2 of the service agreement has been revised. Clients must now provide 45 days' written notice to terminate the contract, instead of the previous 30 days. This change takes effect immediately.", "questions": [{"q": "What was changed in the contract?", "choices": ["The price", "The notice period", "The service provider", "The payment method"], "answer": "The notice period", "paraphrase_note": "지문의 '45 days' written notice... instead of the previous 30 days' → 선지의 'the notice period'로 요약 패러프레이징"}, {"q": "How much notice is now required?", "choices": ["15 days", "30 days", "45 days", "60 days"], "answer": "45 days", "paraphrase_note": "지문의 숫자를 정확히 읽어야 하는 세부사항 확인 유형 (오답 함정: 30일은 '이전' 조건)"}]}}, "day06": {"theme": "인사/채용", "grammar_point": "동사 시제 - 현재완료/과거완료", "vocab": [{"word": "applicant", "pos": "n.", "meaning": "지원자", "collocation": "a qualified applicant", "memory_tip": "apply(지원하다)+ant(사람) → 지원하는 사람", "example": "Over 200 applicants applied for the job."}, {"word": "candidate", "pos": "n.", "meaning": "후보자", "collocation": "a strong candidate", "memory_tip": "candid(하얀, 순수한) → 로마시대 흰 옷 입은 후보에서 유래", "example": "She is a strong candidate for the position."}, {"word": "resume", "pos": "n.", "meaning": "이력서", "collocation": "submit a resume", "memory_tip": "re(다시)+sume(요약하다) → 경력을 요약함", "example": "Please attach your resume to the email."}, {"word": "qualification", "pos": "n.", "meaning": "자격", "collocation": "meet the qualifications", "memory_tip": "qualify(자격을 얻다)+cation", "example": "The job requires a degree qualification."}, {"word": "recruit", "pos": "v.", "meaning": "채용하다", "collocation": "recruit new staff", "memory_tip": "re(다시)+cruit(자라다) → 새 인력을 키워 채용", "example": "The company plans to recruit ten engineers."}, {"word": "vacancy", "pos": "n.", "meaning": "공석", "collocation": "fill a vacancy", "memory_tip": "vacant(비어있는)+cy", "example": "There is a vacancy in the sales department."}, {"word": "promotion", "pos": "n.", "meaning": "승진", "collocation": "receive a promotion", "memory_tip": "pro(앞으로)+mote(움직이다) → 앞으로 나아가게 함", "example": "He received a promotion last month."}, {"word": "probation", "pos": "n.", "meaning": "수습 기간", "collocation": "a probation period", "memory_tip": "prob(시험하다)+ation → 시험해보는 기간", "example": "New hires undergo a three-month probation."}, {"word": "interviewee", "pos": "n.", "meaning": "면접 대상자", "collocation": "prepare the interviewee", "memory_tip": "interview+ee(당하는 사람)", "example": "The interviewee arrived ten minutes early."}, {"word": "onboarding", "pos": "n.", "meaning": "신입 적응 교육", "collocation": "an onboarding program", "memory_tip": "on board(배에 오르다) → 조직에 합류시키는 과정", "example": "The onboarding program lasts one week."}, {"word": "credential", "pos": "n.", "meaning": "자격증, 경력증명", "collocation": "verify credentials", "memory_tip": "cred(믿다)+ential → 믿을 만함을 증명", "example": "Her credentials impressed the hiring panel."}, {"word": "shortlist", "pos": "v./n.", "meaning": "최종후보 명단(에 올리다)", "collocation": "be shortlisted", "memory_tip": "short(짧은)+list → 후보를 줄인 짧은 목록", "example": "Five candidates were shortlisted for interviews."}, {"word": "turnover", "pos": "n.", "meaning": "이직률", "collocation": "reduce employee turnover", "memory_tip": "turn(돌다)+over → 계속 바뀌어 돌아감", "example": "Employee turnover decreased this year."}, {"word": "compensation", "pos": "n.", "meaning": "보상, 급여", "collocation": "a compensation package", "memory_tip": "com(함께)+pensate(달다,저울질) → 균형 맞춰 보상함", "example": "The compensation package includes bonuses."}, {"word": "seniority", "pos": "n.", "meaning": "연공서열, 근속연수", "collocation": "based on seniority", "memory_tip": "senior(연장자)+ity", "example": "Promotions are partly based on seniority."}, {"word": "orientation", "pos": "n.", "meaning": "오리엔테이션", "collocation": "attend orientation", "memory_tip": "orient(방향을 잡다)+ation → 방향을 잡아주는 자리", "example": "New employees attend orientation on Monday."}, {"word": "headhunt", "pos": "v.", "meaning": "인재를 스카우트하다", "collocation": "headhunt a candidate", "memory_tip": "head(우두머리)+hunt(사냥하다) → 인재를 사냥함", "example": "She was headhunted by a rival company."}, {"word": "workforce", "pos": "n.", "meaning": "노동력, 인력", "collocation": "expand the workforce", "memory_tip": "work(일)+force(힘)", "example": "The company expanded its workforce this year."}, {"word": "tenure", "pos": "n.", "meaning": "재직 기간", "collocation": "during her tenure", "memory_tip": "라틴어 tenere(유지하다) → 자리를 유지한 기간", "example": "During his tenure, sales doubled."}, {"word": "layoff", "pos": "n.", "meaning": "해고, 정리해고", "collocation": "avoid layoffs", "memory_tip": "lay(놓다)+off(떨어져) → 자리를 떼어놓음", "example": "The company avoided layoffs this quarter."}, {"word": "severance", "pos": "n.", "meaning": "퇴직금", "collocation": "a severance package", "memory_tip": "sever(단절하다)+ance → 관계가 끊기며 주는 돈", "example": "Employees received a severance package."}, {"word": "onboard", "pos": "v.", "meaning": "적응시키다, 합류시키다", "collocation": "onboard new hires", "memory_tip": "on board(승선하다)에서 확장", "example": "HR helped onboard the new employees."}, {"word": "aptitude", "pos": "n.", "meaning": "적성", "collocation": "an aptitude test", "memory_tip": "apt(적합한)+itude", "example": "Applicants take an aptitude test."}, {"word": "reference check", "pos": "n.", "meaning": "평판 조회", "collocation": "conduct a reference check", "memory_tip": "reference(추천서)+check(확인)", "example": "HR conducted a reference check first."}, {"word": "retention", "pos": "n.", "meaning": "직원 유지", "collocation": "employee retention", "memory_tip": "retain(유지하다)+tion", "example": "The bonus improved employee retention."}], "lc_dialogue": {"script": "A: How many applicants have we received for the vacancy?\nB: About 150, and HR is reviewing resumes now.\nA: Is there a strong candidate so far?\nB: Yes, one person has all the qualifications we need.", "questions": [{"q": "What is HR currently doing?", "choices": ["Interviewing candidates", "Reviewing resumes", "Posting the job", "Signing contracts"], "answer": "Reviewing resumes"}, {"q": "How many applicants applied?", "choices": ["50", "100", "150", "200"], "answer": "150"}]}, "part5": [{"sentence": "The company ___ over 200 resumes since posting the job last week.", "choices": ["receives", "received", "has received", "will receive"], "answer": "has received", "grammar_point": "동사시제: since+과거시점 → 현재완료(계속/경험)"}, {"sentence": "By the time the interview began, the candidate ___ her portfolio.", "choices": ["prepares", "prepared", "had prepared", "will prepare"], "answer": "had prepared", "grammar_point": "동사시제: By the time+과거시제절 → 과거완료(대과거)"}, {"sentence": "She ___ with the company for ten years before her promotion.", "choices": ["works", "worked", "had worked", "works"], "answer": "had worked", "grammar_point": "동사시제: before+과거 사건 → 과거완료"}], "part7": {"passage": "Job Posting: Marketing Assistant. We are seeking a qualified candidate with at least two years of experience. Interested applicants should submit a resume and cover letter by September 30. Selected candidates will undergo a three-month probation period.", "questions": [{"q": "What is required to apply?", "choices": ["A degree only", "A resume and cover letter", "A reference letter", "A portfolio"], "answer": "A resume and cover letter", "paraphrase_note": "지문 'submit a resume and cover letter'가 선지에 그대로 반복 - 직접 매칭형"}, {"q": "What happens after being selected?", "choices": ["Immediate promotion", "A probation period", "Relocation", "A salary review"], "answer": "A probation period", "paraphrase_note": "지문의 'undergo a three-month probation period' → 선지의 'A probation period'로 축약"}]}}, "day07": {"theme": "마케팅/광고", "grammar_point": "수동태", "vocab": [{"word": "campaign", "pos": "n.", "meaning": "캠페인", "collocation": "launch a campaign", "memory_tip": "camp(들판)에서의 군사작전 → 조직적 활동", "example": "The ad campaign launches next month."}, {"word": "target audience", "pos": "n.", "meaning": "목표 고객", "collocation": "reach the target audience", "memory_tip": "target(과녁)+audience(청중) → 겨냥하는 청중", "example": "Our target audience is young professionals."}, {"word": "brand awareness", "pos": "n.", "meaning": "브랜드 인지도", "collocation": "increase brand awareness", "memory_tip": "aware(인식하는)+ness → 인식하고 있음", "example": "The campaign increased brand awareness."}, {"word": "promote", "pos": "v.", "meaning": "홍보하다", "collocation": "promote a product", "memory_tip": "pro(앞으로)+mote(움직이다) → 앞으로 알리다", "example": "We promote our products on social media."}, {"word": "endorsement", "pos": "n.", "meaning": "보증, 추천", "collocation": "a celebrity endorsement", "memory_tip": "en(만들다)+dorse(등, back) → 뒤에서 지지해줌", "example": "The celebrity endorsement boosted sales."}, {"word": "survey", "pos": "n.", "meaning": "설문조사", "collocation": "conduct a survey", "memory_tip": "sur(위에서)+vey(보다) → 전체를 훑어봄", "example": "The survey showed positive feedback."}, {"word": "budget", "pos": "n.", "meaning": "예산", "collocation": "increase the budget", "memory_tip": "bouge(작은 가죽 주머니, 고대프랑스어) → 돈주머니", "example": "The marketing budget increased this year."}, {"word": "launch", "pos": "v./n.", "meaning": "출시(하다)", "collocation": "launch a product", "memory_tip": "배를 진수시키다 → 세상에 내보내다", "example": "They will launch the product in June."}, {"word": "demographic", "pos": "n.", "meaning": "인구통계학적 집단", "collocation": "target a demographic", "memory_tip": "demo(사람들)+graphic(기록) → 사람들의 통계", "example": "The ad targets a younger demographic."}, {"word": "impression", "pos": "n.", "meaning": "(광고) 노출 수", "collocation": "generate impressions", "memory_tip": "im(안으로)+press(누르다) → 마음에 새겨진 인상/노출", "example": "The ad generated one million impressions."}, {"word": "engagement", "pos": "n.", "meaning": "참여도, 소통", "collocation": "boost engagement", "memory_tip": "engage(참여시키다)+ment", "example": "Social media engagement rose sharply."}, {"word": "slogan", "pos": "n.", "meaning": "슬로건", "collocation": "create a catchy slogan", "memory_tip": "스코틀랜드어 전쟁 함성에서 유래", "example": "The new slogan is memorable and short."}, {"word": "conversion rate", "pos": "n.", "meaning": "전환율", "collocation": "improve conversion rate", "memory_tip": "convert(전환하다)+ion → 구매로 전환되는 비율", "example": "The conversion rate improved after the redesign."}, {"word": "outreach", "pos": "n.", "meaning": "홍보 활동, 아웃리치", "collocation": "community outreach", "memory_tip": "out(밖으로)+reach(다다르다) → 밖으로 손을 뻗음", "example": "The company invested in community outreach."}, {"word": "sponsorship", "pos": "n.", "meaning": "후원", "collocation": "secure sponsorship", "memory_tip": "sponsor(후원자)+ship", "example": "The event relies on corporate sponsorship."}, {"word": "viral", "pos": "adj.", "meaning": "입소문이 난", "collocation": "go viral", "memory_tip": "virus(바이러스)처럼 퍼짐", "example": "The video went viral within days."}, {"word": "market share", "pos": "n.", "meaning": "시장 점유율", "collocation": "gain market share", "memory_tip": "market(시장)+share(몫)", "example": "The company gained market share this year."}, {"word": "niche", "pos": "n.", "meaning": "틈새시장", "collocation": "target a niche market", "memory_tip": "프랑스어 '둥지'에서 유래 → 작은 특화 시장", "example": "The brand focused on a niche market."}, {"word": "testimonial", "pos": "n.", "meaning": "고객 후기, 추천사", "collocation": "customer testimonial", "memory_tip": "testify(증언하다)+monial", "example": "The website features customer testimonials."}, {"word": "outperform", "pos": "v.", "meaning": "능가하다", "collocation": "outperform competitors", "memory_tip": "out(넘어서)+perform(수행하다)", "example": "The new ad outperformed last year's campaign."}, {"word": "rebrand", "pos": "v.", "meaning": "브랜드를 재정립하다", "collocation": "rebrand a company", "memory_tip": "re(다시)+brand(브랜드)", "example": "The company decided to rebrand entirely."}, {"word": "influencer", "pos": "n.", "meaning": "인플루언서", "collocation": "partner with an influencer", "memory_tip": "influence(영향)+er", "example": "They partnered with a popular influencer."}, {"word": "impression", "pos": "n.", "meaning": "(광고) 노출", "collocation": "ad impressions", "memory_tip": "Day7 복습: im+press", "example": "The banner generated millions of impressions."}, {"word": "segmentation", "pos": "n.", "meaning": "시장 세분화", "collocation": "market segmentation", "memory_tip": "segment(구획)+ation", "example": "Segmentation helps target the right customers."}, {"word": "traction", "pos": "n.", "meaning": "관심, 반응(견인력)", "collocation": "gain traction", "memory_tip": "tract(끌다)+ion → 끌어당기는 힘", "example": "The new app gained traction quickly."}], "lc_dialogue": {"script": "A: How is the new ad campaign going?\nB: Great, brand awareness has increased since the launch.\nA: Did the survey results come in?\nB: Yes, most of our target audience responded positively.", "questions": [{"q": "What increased since the launch?", "choices": ["The budget", "Brand awareness", "The staff", "The office size"], "answer": "Brand awareness"}, {"q": "How did the target audience respond to the survey?", "choices": ["Negatively", "Positively", "They didn't respond", "Neutrally"], "answer": "Positively"}]}, "part5": [{"sentence": "The new product ___ through social media ads next month.", "choices": ["promotes", "will be promoted", "promoted", "is promoting"], "answer": "will be promoted", "grammar_point": "수동태: 주어(product)가 광고 '행위를 받는' 대상 → be동사+p.p."}, {"sentence": "This year's marketing budget ___ by 20 percent.", "choices": ["increased", "was increased", "increases", "increasing"], "answer": "was increased", "grammar_point": "수동태: 예산은 스스로 늘어나지 않고 '누군가에 의해' 늘려짐"}, {"sentence": "The survey ___ by an outside research firm last month.", "choices": ["conducted", "was conducted", "conducts", "conducting"], "answer": "was conducted", "grammar_point": "수동태: by an outside research firm(행위자) → 수동태 확정 단서"}], "part7": {"passage": "Marketing Update: Our summer campaign will launch on July 1 with a focus on young professionals. The budget has been increased by 20 percent to support additional social media advertising and a celebrity endorsement.", "questions": [{"q": "Who is the target audience for the campaign?", "choices": ["Retirees", "Young professionals", "Students", "Parents"], "answer": "Young professionals", "paraphrase_note": "지문의 'with a focus on young professionals'가 선지에 그대로 반복"}, {"q": "Why was the budget increased?", "choices": ["To hire more staff", "To support more advertising", "To open a new office", "To reduce costs"], "answer": "To support more advertising", "paraphrase_note": "지문의 'to support additional social media advertising and...endorsement' → 선지의 'to support more advertising'으로 요약"}]}}, "day08": {"theme": "재무/회계", "grammar_point": "등위접속사 / 상관접속사", "vocab": [{"word": "revenue", "pos": "n.", "meaning": "수익", "collocation": "annual revenue", "memory_tip": "re(다시)+venue(오다) → 다시 돌아오는 돈", "example": "Revenue increased by 15 percent."}, {"word": "expense", "pos": "n.", "meaning": "비용", "collocation": "operating expense", "memory_tip": "ex(밖으로)+pense(달다,지불) → 밖으로 나가는 돈", "example": "Travel expenses must be reported."}, {"word": "invoice", "pos": "n.", "meaning": "청구서", "collocation": "issue an invoice", "memory_tip": "invoice=송장, 물건과 함께 오는 청구서", "example": "Please send the invoice by email."}, {"word": "audit", "pos": "n./v.", "meaning": "감사(하다)", "collocation": "conduct an audit", "memory_tip": "audi(듣다) → 회계 내용을 청취/검토함", "example": "The company undergoes an annual audit."}, {"word": "profit", "pos": "n.", "meaning": "이익", "collocation": "net profit margin", "memory_tip": "pro(앞으로)+fit(만들다) → 앞으로 나아가게 만든 이득", "example": "The profit margin grew this year."}, {"word": "asset", "pos": "n.", "meaning": "자산", "collocation": "company assets", "memory_tip": "as(~에)+set(충분한) → 충분히 가진 것", "example": "The building is a major company asset."}, {"word": "deduct", "pos": "v.", "meaning": "공제하다", "collocation": "deduct taxes", "memory_tip": "de(아래로)+duct(끌다) → 아래로 빼내다", "example": "Taxes are deducted from your salary."}, {"word": "fiscal", "pos": "adj.", "meaning": "회계의", "collocation": "fiscal year", "memory_tip": "fisc(국고)와 관련 → 재정과 관련된", "example": "The fiscal year ends in December."}, {"word": "surplus", "pos": "n.", "meaning": "흑자, 잉여", "collocation": "budget surplus", "memory_tip": "sur(위로)+plus(더함) → 남아도는 만큼 더함", "example": "The company reported a budget surplus."}, {"word": "deficit", "pos": "n.", "meaning": "적자", "collocation": "run a deficit", "memory_tip": "de(부족)+fic(만들다) → 부족하게 만들어진 것", "example": "The department is running a deficit."}, {"word": "reimburse", "pos": "v.", "meaning": "환급하다, 상환하다", "collocation": "reimburse expenses", "memory_tip": "re(다시)+im+burse(지갑) → 지갑으로 돈을 되돌려줌", "example": "The company will reimburse your travel costs."}, {"word": "allocate", "pos": "v.", "meaning": "배정하다", "collocation": "allocate funds", "memory_tip": "al(~에)+locate(위치시키다) → 자리를 정해 나눠줌", "example": "Funds were allocated to each department."}, {"word": "overhead", "pos": "n.", "meaning": "간접비, 운영비", "collocation": "reduce overhead", "memory_tip": "over(위)+head → 머리 위에 얹힌 고정비용", "example": "The company cut overhead costs significantly."}, {"word": "depreciation", "pos": "n.", "meaning": "감가상각", "collocation": "calculate depreciation", "memory_tip": "de(아래로)+preci(가치)+ation → 가치가 아래로 떨어짐", "example": "Depreciation is calculated annually."}, {"word": "solvent", "pos": "adj.", "meaning": "지불능력이 있는", "collocation": "remain solvent", "memory_tip": "solve(풀다)와 어원 관련 → 빚을 풀 수 있는", "example": "The firm remained solvent despite the crisis."}, {"word": "quarterly", "pos": "adj./adv.", "meaning": "분기별의(로)", "collocation": "a quarterly report", "memory_tip": "quarter(1/4)+ly → 4분의 1마다", "example": "We review finances on a quarterly basis."}, {"word": "balance sheet", "pos": "n.", "meaning": "대차대조표", "collocation": "review the balance sheet", "memory_tip": "balance(균형)+sheet(표)", "example": "The balance sheet shows total assets."}, {"word": "cash flow", "pos": "n.", "meaning": "현금 흐름", "collocation": "positive cash flow", "memory_tip": "cash(현금)+flow(흐름)", "example": "The company maintains strong cash flow."}, {"word": "liquidity", "pos": "n.", "meaning": "유동성", "collocation": "financial liquidity", "memory_tip": "liquid(유동적인)+ity", "example": "Liquidity is essential during downturns."}, {"word": "amortize", "pos": "v.", "meaning": "분할 상환하다", "collocation": "amortize a loan", "memory_tip": "a(~로)+mort(죽음,종결)+ize → 점차 갚아 없앰", "example": "The loan is amortized over ten years."}, {"word": "shareholder", "pos": "n.", "meaning": "주주", "collocation": "notify shareholders", "memory_tip": "share(주식)+holder(보유자)", "example": "Shareholders approved the merger."}, {"word": "capital", "pos": "n.", "meaning": "자본", "collocation": "raise capital", "memory_tip": "capit(머리, 으뜸)와 관련 → 사업의 핵심 자금", "example": "The startup raised capital from investors."}, {"word": "gross income", "pos": "n.", "meaning": "총소득", "collocation": "calculate gross income", "memory_tip": "gross(총, 전체)+income(소득)", "example": "Gross income increased before tax deductions."}, {"word": "forecast", "pos": "n./v.", "meaning": "재무 예측", "collocation": "a financial forecast", "memory_tip": "Day17 복습: fore+cast", "example": "The financial forecast looks promising."}, {"word": "write-off", "pos": "n.", "meaning": "손실 처리, 상각", "collocation": "a tax write-off", "memory_tip": "write off(장부에서 지우다)", "example": "The bad debt was recorded as a write-off."}], "lc_dialogue": {"script": "A: How did revenue look for the fiscal year?\nB: It increased, and profit margins improved too.\nA: Did the audit find any issues?\nB: No, everything checked out fine.", "questions": [{"q": "What improved along with revenue?", "choices": ["Expenses", "Profit margins", "Assets", "Invoices"], "answer": "Profit margins"}, {"q": "What was the result of the audit?", "choices": ["Major issues found", "No issues found", "It was postponed", "It was canceled"], "answer": "No issues found"}]}, "part5": [{"sentence": "The company's revenue increased, ___ profit margins also improved.", "choices": ["and", "or", "but", "so"], "answer": "and", "grammar_point": "등위접속사: 두 개의 긍정적 결과 나열 → and"}, {"sentence": "The audit was ___ thorough ___ time-consuming.", "choices": ["both / and", "either / or", "neither / nor", "not only / and"], "answer": "both / and", "grammar_point": "상관접속사: both A and B (둘 다 해당)"}, {"sentence": "The department must ___ cut costs ___ increase revenue to avoid a deficit.", "choices": ["both / and", "not only / but also", "neither / nor", "either / and"], "answer": "not only / but also", "grammar_point": "상관접속사: not only A but also B (A뿐 아니라 B도)"}], "part7": {"passage": "Finance Memo: The annual audit will begin on October 1. All department heads must submit expense reports and invoices from the current fiscal year by September 25. Late submissions may delay the audit process.", "questions": [{"q": "What must department heads submit by September 25?", "choices": ["Sales reports", "Expense reports and invoices", "Employee reviews", "Marketing plans"], "answer": "Expense reports and invoices", "paraphrase_note": "지문의 'expense reports and invoices'가 선지에 그대로 반복"}, {"q": "What could cause a delay?", "choices": ["Early submissions", "Late submissions", "The audit itself", "A new fiscal year"], "answer": "Late submissions", "paraphrase_note": "지문의 'Late submissions may delay the audit'가 선지에 그대로 반복 - 직접 매칭형"}]}}, "day09": {"theme": "배송/물류", "grammar_point": "종속접속사 (시간/이유/양보)", "vocab": [{"word": "shipment", "pos": "n.", "meaning": "선적, 배송", "collocation": "track a shipment", "memory_tip": "ship(배)+ment → 배로 실어 보내는 것", "example": "The shipment arrived a day late."}, {"word": "warehouse", "pos": "n.", "meaning": "창고", "collocation": "store in a warehouse", "memory_tip": "ware(물건)+house(집) → 물건을 두는 집", "example": "Goods are stored in the warehouse."}, {"word": "inventory", "pos": "n.", "meaning": "재고", "collocation": "check inventory levels", "memory_tip": "invent(발견하다)+ory → 목록을 찾아 정리한 것", "example": "We need to check the inventory levels."}, {"word": "carrier", "pos": "n.", "meaning": "운송업체", "collocation": "shipping carrier", "memory_tip": "carry(운반하다)+er", "example": "The carrier delivers packages nationwide."}, {"word": "damaged", "pos": "adj.", "meaning": "손상된", "collocation": "damaged goods", "memory_tip": "damage(손상)+ed", "example": "Some items arrived damaged."}, {"word": "tracking number", "pos": "n.", "meaning": "송장번호", "collocation": "check the tracking number", "memory_tip": "track(추적하다)+ing", "example": "Use the tracking number to check status."}, {"word": "supplier", "pos": "n.", "meaning": "공급업체", "collocation": "a reliable supplier", "memory_tip": "supply(공급하다)+er", "example": "We changed suppliers last year."}, {"word": "dispatch", "pos": "v.", "meaning": "발송하다", "collocation": "dispatch an order", "memory_tip": "dis(떨어져)+patch(보내다) → 밖으로 내보냄", "example": "The order was dispatched this morning."}, {"word": "logistics", "pos": "n.", "meaning": "물류", "collocation": "manage logistics", "memory_tip": "Day2 복습: logi(계산하다)+stics", "example": "The logistics team coordinated the delivery."}, {"word": "freight", "pos": "n.", "meaning": "화물(운송)", "collocation": "freight charges", "memory_tip": "fraught(짐이 실린)에서 유래", "example": "Freight charges increased this quarter."}, {"word": "customs clearance", "pos": "n.", "meaning": "통관", "collocation": "obtain customs clearance", "memory_tip": "customs(세관)+clearance(허가) → 세관 통과 허가", "example": "The shipment awaits customs clearance."}, {"word": "expedite", "pos": "v.", "meaning": "신속히 처리하다", "collocation": "expedite delivery", "memory_tip": "ex(밖으로)+ped(발) → 발을 재빨리 밖으로", "example": "We paid extra to expedite the shipment."}, {"word": "backorder", "pos": "n.", "meaning": "이월 주문(재고 부족)", "collocation": "on backorder", "memory_tip": "back(뒤로)+order → 재고 없어 미뤄진 주문", "example": "The item is currently on backorder."}, {"word": "pallet", "pos": "n.", "meaning": "팔레트(운반용 받침대)", "collocation": "load a pallet", "memory_tip": "프랑스어 palette(작은 삽)에서 유래", "example": "Goods are stacked on wooden pallets."}, {"word": "consignment", "pos": "n.", "meaning": "위탁 화물", "collocation": "a consignment of goods", "memory_tip": "con(함께)+sign(서명하다) → 서명하고 맡긴 화물", "example": "A large consignment arrived yesterday."}, {"word": "perishable", "pos": "adj.", "meaning": "부패하기 쉬운", "collocation": "perishable goods", "memory_tip": "perish(썩다)+able → 썩을 수 있는", "example": "Perishable goods require refrigerated transport."}, {"word": "bill of lading", "pos": "n.", "meaning": "선하증권", "collocation": "issue a bill of lading", "memory_tip": "bill(증서)+lading(적재)", "example": "The bill of lading confirms the cargo details."}, {"word": "port of entry", "pos": "n.", "meaning": "입항지, 입국항", "collocation": "clear at the port of entry", "memory_tip": "port(항구)+entry(입장)", "example": "Goods are inspected at the port of entry."}, {"word": "cargo", "pos": "n.", "meaning": "화물", "collocation": "load cargo", "memory_tip": "스페인어 cargar(싣다)에서 유래", "example": "The ship carried heavy cargo."}, {"word": "container", "pos": "n.", "meaning": "컨테이너", "collocation": "a shipping container", "memory_tip": "contain(담다)+er", "example": "The container was loaded onto the ship."}, {"word": "haulage", "pos": "n.", "meaning": "화물 운송", "collocation": "road haulage", "memory_tip": "haul(끌다, 운반하다)+age", "example": "Haulage costs rose due to fuel prices."}, {"word": "freight forwarder", "pos": "n.", "meaning": "화물 운송 주선업체", "collocation": "hire a freight forwarder", "memory_tip": "freight(화물)+forward(보내다)+er", "example": "The freight forwarder arranged customs paperwork."}, {"word": "delivery window", "pos": "n.", "meaning": "배송 가능 시간대", "collocation": "a two-hour delivery window", "memory_tip": "delivery(배송)+window(창구, 시간대)", "example": "Please choose a delivery window."}, {"word": "stockroom", "pos": "n.", "meaning": "물품 보관실", "collocation": "check the stockroom", "memory_tip": "stock(재고)+room(방)", "example": "Extra supplies are in the stockroom."}, {"word": "return authorization", "pos": "n.", "meaning": "반품 승인(번호)", "collocation": "obtain return authorization", "memory_tip": "return(반품)+authorize(승인하다)", "example": "Customers need a return authorization number."}], "lc_dialogue": {"script": "A: Has the shipment from the supplier arrived yet?\nB: Not yet, but the carrier gave us a tracking number.\nA: Please check the warehouse inventory in the meantime.\nB: Sure, I'll do that right away.", "questions": [{"q": "What did the carrier provide?", "choices": ["An invoice", "A tracking number", "A discount", "A refund"], "answer": "A tracking number"}, {"q": "What does A ask B to check?", "choices": ["The invoice", "The warehouse inventory", "The supplier contract", "The delivery date"], "answer": "The warehouse inventory"}]}, "part5": [{"sentence": "___ the shipment arrived late, the client was not charged extra fees.", "choices": ["Although", "Because", "So that", "As soon as"], "answer": "Although", "grammar_point": "종속접속사(양보): 앞뒤가 상반된 내용 → although"}, {"sentence": "We expedited the order ___ the client needed it urgently.", "choices": ["although", "because", "even though", "unless"], "answer": "because", "grammar_point": "종속접속사(이유): 원인-결과 관계 → because"}, {"sentence": "___ the goods pass customs clearance, they will be delivered to the warehouse.", "choices": ["As soon as", "Although", "Even though", "In case"], "answer": "As soon as", "grammar_point": "종속접속사(시간): ~하자마자 → as soon as"}], "part7": {"passage": "Shipping Notice: Your order #4521 has been dispatched and is expected to arrive within 3-5 business days. You can track your package using the tracking number provided in this email. Please inspect items upon arrival for damage.", "questions": [{"q": "When is the order expected to arrive?", "choices": ["1-2 days", "3-5 days", "One week", "Two weeks"], "answer": "3-5 days", "paraphrase_note": "지문의 'expected to arrive within 3-5 business days'가 선지에 그대로 반복"}, {"q": "What should the customer do upon arrival?", "choices": ["Contact the supplier", "Inspect items for damage", "Return the package", "Pay an invoice"], "answer": "Inspect items for damage", "paraphrase_note": "지문의 'inspect items upon arrival for damage'가 선지에 그대로 반복 - 직접 매칭형"}]}}, "day10": {"theme": "복습 주간 (Day1~9 유형+문법 재시험)", "note": "이번 Day는 새 문제 대신 Day1~9 오답노트에서 가장 많이 틀린 유형 3개를 골라 재시험 보는 날입니다. 문법 포인트 복습 순서: 명사자리→동사자리→형용사자리→부사자리→시제(단순)→시제(완료)→수동태→등위/상관접속사→종속접속사. 앱에서는 이 Day를 '복습일'로 표시하고 새 콘텐츠 대신 오답노트 유형별 뷰 + 문법 포인트별 재시험 문제를 띄우면 됩니다.", "vocab_review": ["colleague", "agenda", "inquiry", "itinerary", "clause", "candidate", "campaign", "revenue", "shipment"], "vocab": []}, "day11": {"theme": "고객 서비스", "grammar_point": "전치사 - 시간", "vocab": [{"word": "complaint", "pos": "n.", "meaning": "불만", "collocation": "file a complaint", "memory_tip": "complain(불평하다)+t", "example": "The company handled the complaint quickly."}, {"word": "refund", "pos": "n./v.", "meaning": "환불(하다)", "collocation": "request a refund", "memory_tip": "re(다시)+fund(자금) → 돈을 다시 돌려줌", "example": "She requested a full refund."}, {"word": "warranty", "pos": "n.", "meaning": "보증(서)", "collocation": "under warranty", "memory_tip": "warrant(보증하다)+y", "example": "The product comes with a one-year warranty."}, {"word": "exchange", "pos": "v./n.", "meaning": "교환(하다)", "collocation": "exchange an item", "memory_tip": "ex(밖으로)+change(바꾸다) → 서로 바꿈", "example": "You may exchange the item within 30 days."}, {"word": "satisfaction", "pos": "n.", "meaning": "만족", "collocation": "customer satisfaction", "memory_tip": "satisfy(만족시키다)+action", "example": "Customer satisfaction is our top priority."}, {"word": "defective", "pos": "adj.", "meaning": "결함이 있는", "collocation": "a defective unit", "memory_tip": "defect(결함)+ive", "example": "The defective unit was replaced."}, {"word": "assist", "pos": "v.", "meaning": "돕다", "collocation": "assist a customer", "memory_tip": "as(~에)+sist(서다) → 곁에 서서 돕다", "example": "Our staff will assist you shortly."}, {"word": "policy", "pos": "n.", "meaning": "정책", "collocation": "return policy", "memory_tip": "그리스어 polis(도시국가) → 조직의 규칙", "example": "Please review our return policy."}, {"word": "hotline", "pos": "n.", "meaning": "직통전화, 핫라인", "collocation": "call the hotline", "memory_tip": "hot(급한)+line(전화선) → 급할 때 쓰는 전화선", "example": "Call our hotline for urgent issues."}, {"word": "resolve", "pos": "v.", "meaning": "해결하다", "collocation": "resolve an issue", "memory_tip": "re(강조)+solve(풀다) → 완전히 풀다", "example": "We resolved the issue within a day."}, {"word": "feedback", "pos": "n.", "meaning": "피드백, 의견", "collocation": "provide feedback", "memory_tip": "feed(주다)+back(되돌려) → 되돌려주는 반응", "example": "We value your feedback greatly."}, {"word": "compensation", "pos": "n.", "meaning": "보상", "collocation": "offer compensation", "memory_tip": "Day6 복습: com+pensate(저울질하다)", "example": "The airline offered compensation for the delay."}, {"word": "courteous", "pos": "adj.", "meaning": "정중한", "collocation": "courteous service", "memory_tip": "Day3 복습: court(궁정)+eous", "example": "The staff were courteous and helpful."}, {"word": "escalate", "pos": "v.", "meaning": "확대하다, 상부에 보고하다", "collocation": "escalate a complaint", "memory_tip": "scale(사다리)+ate → 위로 올려보내다", "example": "The issue was escalated to a manager."}, {"word": "loyalty", "pos": "n.", "meaning": "충성도", "collocation": "customer loyalty", "memory_tip": "loyal(충실한)+ty", "example": "The rewards program builds customer loyalty."}, {"word": "grievance", "pos": "n.", "meaning": "불만사항, 고충", "collocation": "file a grievance", "memory_tip": "grief(슬픔)와 어원 관련 → 힘든 일에 대한 불만", "example": "Employees can file a formal grievance."}, {"word": "grievance", "pos": "n.", "meaning": "불만사항", "collocation": "address a grievance", "memory_tip": "Day11 본문 복습: grief(슬픔)와 관련", "example": "The manager addressed the customer's grievance."}, {"word": "rectify", "pos": "v.", "meaning": "바로잡다", "collocation": "rectify an error", "memory_tip": "rect(바른)+ify(만들다)", "example": "We will rectify the billing error immediately."}, {"word": "goodwill", "pos": "n.", "meaning": "호의, 신뢰", "collocation": "build customer goodwill", "memory_tip": "good(좋은)+will(의지)", "example": "The free upgrade built customer goodwill."}, {"word": "helpline", "pos": "n.", "meaning": "상담 전화", "collocation": "call the helpline", "memory_tip": "help(도움)+line(전화선)", "example": "Call our helpline for immediate assistance."}, {"word": "empathize", "pos": "v.", "meaning": "공감하다", "collocation": "empathize with customers", "memory_tip": "em(안으로)+path(감정)+ize", "example": "Staff are trained to empathize with customers."}, {"word": "redress", "pos": "n./v.", "meaning": "시정, 배상", "collocation": "seek redress", "memory_tip": "re(다시)+dress(바로잡다)", "example": "The customer sought redress for the fault."}, {"word": "proactive", "pos": "adj.", "meaning": "선제적인", "collocation": "a proactive approach", "memory_tip": "pro(미리)+active(적극적인)", "example": "The team took a proactive approach to complaints."}, {"word": "downgrade", "pos": "v.", "meaning": "질을 낮추다", "collocation": "downgrade a service", "memory_tip": "down(아래로)+grade(등급)", "example": "Customers can downgrade their plan anytime."}, {"word": "reassure", "pos": "v.", "meaning": "안심시키다", "collocation": "reassure a client", "memory_tip": "re(다시)+assure(확신시키다)", "example": "The agent reassured the worried client."}], "lc_dialogue": {"script": "A: A customer filed a complaint about a defective product.\nB: Did you offer a refund or an exchange?\nA: I offered an exchange under our warranty policy.\nB: Good, customer satisfaction should improve.", "questions": [{"q": "What did the customer complain about?", "choices": ["Late delivery", "A defective product", "High prices", "Poor service"], "answer": "A defective product"}, {"q": "What did A offer the customer?", "choices": ["A refund", "An exchange", "A discount", "Nothing"], "answer": "An exchange"}]}, "part5": [{"sentence": "Customers may return defective items ___ 30 days for a full refund.", "choices": ["within", "during", "since", "by"], "answer": "within", "grammar_point": "전치사(시간): '~이내에'라는 기간 한도 → within"}, {"sentence": "Our support team is available ___ 9 a.m. to 6 p.m.", "choices": ["from", "since", "by", "at"], "answer": "from", "grammar_point": "전치사(시간): from A to B 구문"}, {"sentence": "The warranty remains valid ___ one full year ___ purchase.", "choices": ["for / from", "during / to", "within / at", "since / of"], "answer": "for / from", "grammar_point": "전치사(시간): 기간(for)+시작점(from) 조합"}], "part7": {"passage": "Customer Service Update: We have revised our return policy. Customers may now exchange defective items within 60 days instead of 30. All products remain covered under a one-year warranty. Contact our support team for assistance.", "questions": [{"q": "What changed in the policy?", "choices": ["The warranty length", "The exchange period", "The refund amount", "The store hours"], "answer": "The exchange period", "paraphrase_note": "지문의 'exchange defective items within 60 days instead of 30' → 선지의 'the exchange period'로 요약"}, {"q": "How long is the warranty?", "choices": ["30 days", "60 days", "6 months", "One year"], "answer": "One year", "paraphrase_note": "숫자 함정 주의: 60일은 '교환기간', 1년은 '보증기간' - 서로 다른 항목을 헷갈리게 하는 전형적 오답 함정"}]}}, "day12": {"theme": "IT/기술", "grammar_point": "전치사 - 장소/기타", "vocab": [{"word": "upgrade", "pos": "v./n.", "meaning": "업그레이드(하다)", "collocation": "upgrade the system", "memory_tip": "up(위로)+grade(등급) → 등급을 올림", "example": "We upgraded the software last week."}, {"word": "malfunction", "pos": "n./v.", "meaning": "고장, 오작동", "collocation": "a system malfunction", "memory_tip": "mal(나쁜)+function(기능) → 나쁘게 작동함", "example": "The printer is malfunctioning again."}, {"word": "install", "pos": "v.", "meaning": "설치하다", "collocation": "install an update", "memory_tip": "in(안에)+stall(자리) → 자리를 잡아 넣다", "example": "Please install the update tonight."}, {"word": "backup", "pos": "n.", "meaning": "백업", "collocation": "keep a backup", "memory_tip": "back(뒤에)+up(대비) → 뒤에 대비해둔 것", "example": "Always keep a backup of your files."}, {"word": "network", "pos": "n.", "meaning": "네트워크", "collocation": "network connection", "memory_tip": "net(그물)+work → 그물처럼 연결된 것", "example": "The network went down this morning."}, {"word": "troubleshoot", "pos": "v.", "meaning": "문제를 해결하다", "collocation": "troubleshoot an issue", "memory_tip": "trouble(문제)+shoot(쏘다) → 문제를 정조준해 해결", "example": "IT will troubleshoot the issue."}, {"word": "access", "pos": "n./v.", "meaning": "접근(하다)", "collocation": "access the system", "memory_tip": "ac(~에)+cess(가다) → 다가가다", "example": "You need a password to access the system."}, {"word": "compatible", "pos": "adj.", "meaning": "호환되는", "collocation": "compatible with devices", "memory_tip": "com(함께)+pat(견디다) → 함께 견디며 잘 맞음", "example": "The app is compatible with all devices."}, {"word": "server", "pos": "n.", "meaning": "서버", "collocation": "server downtime", "memory_tip": "serve(제공하다)+er → 데이터를 제공하는 것", "example": "The server crashed during peak hours."}, {"word": "firewall", "pos": "n.", "meaning": "방화벽", "collocation": "configure a firewall", "memory_tip": "fire(불)+wall(벽) → 불을 막는 벽처럼 보안벽", "example": "The firewall blocked the suspicious traffic."}, {"word": "encrypt", "pos": "v.", "meaning": "암호화하다", "collocation": "encrypt data", "memory_tip": "en(만들다)+crypt(숨기다) → 숨겨 만들다", "example": "All customer data is encrypted."}, {"word": "glitch", "pos": "n.", "meaning": "사소한 오류", "collocation": "a technical glitch", "memory_tip": "이디시어 glitshen(미끄러지다)에서 유래", "example": "A small glitch delayed the launch."}, {"word": "bandwidth", "pos": "n.", "meaning": "대역폭, 처리용량", "collocation": "increase bandwidth", "memory_tip": "band(대역)+width(너비) → 통신 대역의 넓이", "example": "We upgraded our bandwidth for faster speeds."}, {"word": "interface", "pos": "n.", "meaning": "인터페이스, 접점", "collocation": "a user-friendly interface", "memory_tip": "inter(사이)+face(얼굴) → 사람과 기계 사이의 접점", "example": "The new interface is easy to use."}, {"word": "database", "pos": "n.", "meaning": "데이터베이스", "collocation": "update the database", "memory_tip": "data+base(기반) → 자료의 기반", "example": "The database was updated overnight."}, {"word": "outage", "pos": "n.", "meaning": "정전, 서비스 중단", "collocation": "a power outage", "memory_tip": "out(끊김)+age → 끊긴 상태", "example": "The outage lasted about two hours."}, {"word": "patch", "pos": "n./v.", "meaning": "패치, 수정하다", "collocation": "release a patch", "memory_tip": "옷의 헝겊 조각처럼 일부를 고침", "example": "IT released a security patch overnight."}, {"word": "breach", "pos": "n.", "meaning": "(보안) 침해", "collocation": "a data breach", "memory_tip": "Day5 복습: break(깨다)와 관련", "example": "The company reported a data breach."}, {"word": "cloud storage", "pos": "n.", "meaning": "클라우드 저장소", "collocation": "use cloud storage", "memory_tip": "cloud(구름)+storage(저장)", "example": "Files are saved to cloud storage automatically."}, {"word": "authentication", "pos": "n.", "meaning": "인증", "collocation": "two-factor authentication", "memory_tip": "authentic(진짜의)+ication", "example": "Two-factor authentication improves security."}, {"word": "reboot", "pos": "v.", "meaning": "재부팅하다", "collocation": "reboot the system", "memory_tip": "re(다시)+boot(부팅하다)", "example": "Try rebooting your computer first."}, {"word": "firmware", "pos": "n.", "meaning": "펌웨어", "collocation": "update firmware", "memory_tip": "firm(단단한)+ware(제품) → 하드웨어에 고정된 소프트웨어", "example": "The device needs a firmware update."}, {"word": "latency", "pos": "n.", "meaning": "지연시간", "collocation": "reduce latency", "memory_tip": "latent(잠재된)+cy → 숨어서 걸리는 시간", "example": "The new server reduced network latency."}, {"word": "deprecate", "pos": "v.", "meaning": "사용을 중단하다, 지원 종료하다", "collocation": "deprecate an old feature", "memory_tip": "de(아래로)+precate(간청하다) → 점차 없어지도록 함", "example": "The old API will be deprecated next year."}, {"word": "scalable", "pos": "adj.", "meaning": "확장 가능한", "collocation": "a scalable solution", "memory_tip": "scale(규모)+able", "example": "The platform is highly scalable."}], "lc_dialogue": {"script": "A: The network has been malfunctioning all morning.\nB: I know, IT is trying to troubleshoot it now.\nA: Should I install the new update in the meantime?\nB: No, wait until they confirm it's compatible.", "questions": [{"q": "What problem are they discussing?", "choices": ["A slow computer", "A network malfunction", "A missing file", "A broken printer"], "answer": "A network malfunction"}, {"q": "Why shouldn't A install the update yet?", "choices": ["It's too expensive", "It might not be compatible", "IT is busy", "There's no backup"], "answer": "It might not be compatible"}]}, "part5": [{"sentence": "The server is located ___ the third floor of the building.", "choices": ["on", "in", "at", "to"], "answer": "on", "grammar_point": "전치사(장소): 층(floor) 표현엔 on"}, {"sentence": "Employees need special access ___ the server room.", "choices": ["to", "on", "for", "with"], "answer": "to", "grammar_point": "전치사(장소/방향): access to + 장소"}, {"sentence": "The new interface was designed ___ non-technical users.", "choices": ["for", "to", "of", "with"], "answer": "for", "grammar_point": "전치사(목적/대상): designed for + 대상"}], "part7": {"passage": "IT Notice: Our network experienced a malfunction this morning and is now fully restored. As a precaution, please back up your files before installing the upcoming software update, which will be compatible with all company devices.", "questions": [{"q": "What is the current status of the network?", "choices": ["Still down", "Fully restored", "Being upgraded", "Being replaced"], "answer": "Fully restored", "paraphrase_note": "지문의 'is now fully restored'가 선지에 그대로 반복"}, {"q": "What should employees do before the update?", "choices": ["Restart their computers", "Back up their files", "Contact IT", "Change their password"], "answer": "Back up their files", "paraphrase_note": "지문의 'please back up your files before installing'이 선지에 그대로 반복 - 직접 매칭형"}]}}, "day13": {"theme": "제조/생산", "grammar_point": "관계대명사 (who/which/that)", "vocab": [{"word": "manufacture", "pos": "v.", "meaning": "제조하다", "collocation": "manufacture goods", "memory_tip": "manu(손)+fact(만들다) → 손으로 만들다", "example": "The factory manufactures car parts."}, {"word": "defect rate", "pos": "n.", "meaning": "불량률", "collocation": "lower the defect rate", "memory_tip": "defect(결함)+rate(비율)", "example": "The defect rate dropped this quarter."}, {"word": "assembly line", "pos": "n.", "meaning": "조립 라인", "collocation": "operate the assembly line", "memory_tip": "assemble(조립하다)+line(줄)", "example": "Workers operate the assembly line."}, {"word": "quality control", "pos": "n.", "meaning": "품질 관리", "collocation": "strict quality control", "memory_tip": "quality(품질)+control(관리)", "example": "Quality control checks every product."}, {"word": "output", "pos": "n.", "meaning": "생산량", "collocation": "increase output", "memory_tip": "out(밖으로)+put(놓다) → 밖으로 내놓은 결과", "example": "Output increased after the upgrade."}, {"word": "raw material", "pos": "n.", "meaning": "원자재", "collocation": "source raw materials", "memory_tip": "raw(가공되지 않은)+material(재료)", "example": "Raw material prices went up."}, {"word": "durable", "pos": "adj.", "meaning": "내구성 있는", "collocation": "durable goods", "memory_tip": "dur(지속하다, endure)+able", "example": "The product is durable and reliable."}, {"word": "inspect", "pos": "v.", "meaning": "검사하다", "collocation": "inspect a product", "memory_tip": "in(안을)+spect(보다) → 안을 들여다보다", "example": "Each item is inspected before shipping."}, {"word": "calibrate", "pos": "v.", "meaning": "보정하다, 조정하다", "collocation": "calibrate equipment", "memory_tip": "calibre(구경)와 관련 → 정밀하게 맞추다", "example": "Technicians calibrate the machines monthly."}, {"word": "prototype", "pos": "n.", "meaning": "시제품", "collocation": "test a prototype", "memory_tip": "proto(최초의)+type(형태) → 최초의 형태", "example": "The prototype passed all safety tests."}, {"word": "specification", "pos": "n.", "meaning": "사양, 명세", "collocation": "meet specifications", "memory_tip": "specify(명시하다)+cation", "example": "The parts must meet strict specifications."}, {"word": "automation", "pos": "n.", "meaning": "자동화", "collocation": "increase automation", "memory_tip": "automatic(자동의)+ion", "example": "Automation reduced labor costs."}, {"word": "downtime", "pos": "n.", "meaning": "가동 중단 시간", "collocation": "reduce downtime", "memory_tip": "down(멈춘)+time → 멈춰있는 시간", "example": "Machine downtime was minimized this month."}, {"word": "yield", "pos": "n./v.", "meaning": "생산량, 산출하다", "collocation": "production yield", "memory_tip": "yield=내놓다, 산출량", "example": "The new process improved production yield."}, {"word": "component", "pos": "n.", "meaning": "부품, 구성요소", "collocation": "a key component", "memory_tip": "com(함께)+pon(놓다) → 함께 놓인 부분", "example": "Each component is tested individually."}, {"word": "batch", "pos": "n.", "meaning": "일괄, 뱃치", "collocation": "a batch of products", "memory_tip": "bake(굽다)와 관련 → 한 번에 구워낸 묶음", "example": "The last batch failed inspection."}, {"word": "throughput", "pos": "n.", "meaning": "처리량", "collocation": "increase throughput", "memory_tip": "through(통과하여)+put(놓다) → 통과시키는 양", "example": "The new machine increased throughput."}, {"word": "defective unit", "pos": "n.", "meaning": "불량품", "collocation": "identify a defective unit", "memory_tip": "defect(결함)+ive+unit(개체)", "example": "Defective units are removed from the line."}, {"word": "streamlined", "pos": "adj.", "meaning": "간소화된", "collocation": "a streamlined process", "memory_tip": "Day1 복습: stream+line+ed", "example": "The streamlined process saved time."}, {"word": "tolerance", "pos": "n.", "meaning": "공차, 허용 오차", "collocation": "within tolerance", "memory_tip": "tolerate(견디다)+ance", "example": "The parts must stay within tolerance."}, {"word": "downtime", "pos": "n.", "meaning": "가동 중단", "collocation": "minimize downtime", "memory_tip": "Day13 복습: down+time", "example": "Scheduled maintenance reduced downtime."}, {"word": "lean manufacturing", "pos": "n.", "meaning": "린 생산방식(낭비 최소화)", "collocation": "adopt lean manufacturing", "memory_tip": "lean(군살없는)+manufacturing", "example": "The plant adopted lean manufacturing principles."}, {"word": "workstation", "pos": "n.", "meaning": "작업대", "collocation": "at each workstation", "memory_tip": "work(작업)+station(자리)", "example": "Each workstation has safety equipment."}, {"word": "recall", "pos": "n./v.", "meaning": "리콜, 회수하다", "collocation": "issue a recall", "memory_tip": "re(다시)+call(부르다) → 다시 불러들임", "example": "The company issued a product recall."}, {"word": "certification", "pos": "n.", "meaning": "인증", "collocation": "quality certification", "memory_tip": "certify(인증하다)+cation", "example": "The factory earned ISO certification."}], "lc_dialogue": {"script": "A: How is the new assembly line performing?\nB: Output has increased, and the defect rate is lower.\nA: Great. Is quality control inspecting every item?\nB: Yes, each product is inspected before shipping.", "questions": [{"q": "What has increased on the new assembly line?", "choices": ["Defect rate", "Output", "Raw material cost", "Staff numbers"], "answer": "Output"}, {"q": "What does quality control do?", "choices": ["Ships products", "Inspects every item", "Orders raw materials", "Trains workers"], "answer": "Inspects every item"}]}, "part5": [{"sentence": "The technician ___ calibrated the machines found several errors.", "choices": ["who", "which", "whose", "whom"], "answer": "who", "grammar_point": "관계대명사: 선행사(technician, 사람)+주격 → who"}, {"sentence": "The prototype, ___ specifications were strict, passed every test.", "choices": ["who", "which", "whose", "that"], "answer": "whose", "grammar_point": "관계대명사: 선행사(prototype)+소유격 관계 → whose"}, {"sentence": "The components ___ failed inspection were sent back to the supplier.", "choices": ["who", "which", "whom", "whose"], "answer": "which", "grammar_point": "관계대명사: 선행사(components, 사물)+주격 → which"}], "part7": {"passage": "Production Report: Output on the new assembly line rose by 12 percent this quarter, while the defect rate fell to under 1 percent. Quality control now inspects each unit twice before it is approved for shipping.", "questions": [{"q": "What happened to output this quarter?", "choices": ["It fell", "It stayed the same", "It rose by 12 percent", "It rose by 50 percent"], "answer": "It rose by 12 percent", "paraphrase_note": "지문의 'Output... rose by 12 percent'가 선지에 그대로 반복 - 숫자 정확히 확인"}, {"q": "How many times is each unit inspected?", "choices": ["Once", "Twice", "Three times", "It is not inspected"], "answer": "Twice", "paraphrase_note": "지문의 'inspects each unit twice'가 선지의 'Twice'로 직접 매칭"}]}}, "day14": {"theme": "부동산/시설", "grammar_point": "관계부사 (where/when/why)", "vocab": [{"word": "lease", "pos": "n./v.", "meaning": "임대(하다)", "collocation": "sign a lease", "memory_tip": "let(빌려주다)과 어원 관련", "example": "The company signed a five-year lease."}, {"word": "tenant", "pos": "n.", "meaning": "세입자", "collocation": "a new tenant", "memory_tip": "tenir(프랑스어, 유지하다) → 공간을 유지하며 사는 사람", "example": "The tenant renewed the lease."}, {"word": "renovate", "pos": "v.", "meaning": "개조하다", "collocation": "renovate an office", "memory_tip": "re(다시)+nov(새로운) → 다시 새롭게 하다", "example": "The office will be renovated next month."}, {"word": "premises", "pos": "n.", "meaning": "구내, 부지", "collocation": "on the premises", "memory_tip": "pre(앞에)+mise(놓다) → 앞서 놓인 부지", "example": "No smoking is allowed on the premises."}, {"word": "utility", "pos": "n.", "meaning": "공공요금, 시설", "collocation": "utility costs", "memory_tip": "use(사용하다)+ility → 사용에 필요한 것", "example": "Utility costs are included in the rent."}, {"word": "facility", "pos": "n.", "meaning": "시설", "collocation": "fitness facility", "memory_tip": "facile(쉬운)+ity → 쉽게 이용하도록 만든 시설", "example": "The building has a fitness facility."}, {"word": "vacant", "pos": "adj.", "meaning": "비어 있는", "collocation": "a vacant office", "memory_tip": "vac(비우다)+ant", "example": "The office on the third floor is vacant."}, {"word": "maintenance", "pos": "n.", "meaning": "유지보수", "collocation": "maintenance work", "memory_tip": "maintain(유지하다)+ance", "example": "Maintenance work starts Monday."}, {"word": "landlord", "pos": "n.", "meaning": "임대인, 건물주", "collocation": "contact the landlord", "memory_tip": "land(땅)+lord(주인) → 땅의 주인", "example": "The landlord approved the renovation."}, {"word": "occupancy", "pos": "n.", "meaning": "점유, 입주율", "collocation": "occupancy rate", "memory_tip": "occupy(점유하다)+ancy", "example": "The building's occupancy rate is 90 percent."}, {"word": "square footage", "pos": "n.", "meaning": "평수, 면적", "collocation": "total square footage", "memory_tip": "square(제곱)+footage(발 단위 면적)", "example": "The office has 5,000 square feet of space."}, {"word": "relocate", "pos": "v.", "meaning": "이전하다", "collocation": "relocate the office", "memory_tip": "re(다시)+locate(위치시키다)", "example": "The firm relocated to a larger building."}, {"word": "amenity", "pos": "n.", "meaning": "편의시설", "collocation": "building amenities", "memory_tip": "amene(라틴어, 쾌적한)+ity", "example": "The building offers many amenities."}, {"word": "inspection", "pos": "n.", "meaning": "점검, 검사", "collocation": "a safety inspection", "memory_tip": "inspect(검사하다)+ion", "example": "The annual inspection passed without issue."}, {"word": "lobby", "pos": "n.", "meaning": "로비", "collocation": "the building lobby", "memory_tip": "라틴어 lobia(회랑)에서 유래", "example": "Guests wait in the lobby."}, {"word": "zoning", "pos": "n.", "meaning": "구역제, 용도지역", "collocation": "zoning regulations", "memory_tip": "zone(구역)+ing", "example": "Zoning regulations restrict building height."}, {"word": "subletting", "pos": "n.", "meaning": "전대차, 재임대", "collocation": "prohibit subletting", "memory_tip": "sub(아래로)+letting(임대) → 다시 아래로 임대", "example": "The lease prohibits subletting."}, {"word": "eviction", "pos": "n.", "meaning": "퇴거", "collocation": "avoid eviction", "memory_tip": "evict(퇴거시키다)+ion", "example": "The tenant avoided eviction by paying rent."}, {"word": "appraisal", "pos": "n.", "meaning": "감정, 평가", "collocation": "a property appraisal", "memory_tip": "appraise(감정하다)+al", "example": "The property appraisal took two days."}, {"word": "deed", "pos": "n.", "meaning": "증서, 권리증", "collocation": "sign the deed", "memory_tip": "행위(deed)라는 뜻에서 법적 문서로 확장", "example": "The deed transfers ownership of the land."}, {"word": "commercial property", "pos": "n.", "meaning": "상업용 부동산", "collocation": "invest in commercial property", "memory_tip": "commercial(상업의)+property(부동산)", "example": "They invested in commercial property downtown."}, {"word": "prime location", "pos": "n.", "meaning": "최적의 입지", "collocation": "a prime location", "memory_tip": "prime(최고의)+location(위치)", "example": "The store is in a prime location."}, {"word": "co-working space", "pos": "n.", "meaning": "공유 오피스", "collocation": "rent a co-working space", "memory_tip": "co(함께)+working+space", "example": "Startups often rent co-working spaces."}, {"word": "vacancy rate", "pos": "n.", "meaning": "공실률", "collocation": "a low vacancy rate", "memory_tip": "vacancy(공석)+rate(비율)", "example": "The building has a low vacancy rate."}, {"word": "sublease", "pos": "n./v.", "meaning": "전대(하다)", "collocation": "sublease an office", "memory_tip": "sub(아래)+lease(임대)", "example": "The company subleased part of its office."}], "lc_dialogue": {"script": "A: Is the third-floor office still vacant?\nB: No, a new tenant signed a lease last week.\nA: When does maintenance start on the lobby?\nB: Renovation begins Monday and includes new facilities.", "questions": [{"q": "What happened to the third-floor office?", "choices": ["It's still vacant", "A new tenant leased it", "It was renovated", "It was closed"], "answer": "A new tenant leased it"}, {"q": "When does the lobby renovation begin?", "choices": ["Today", "Monday", "Next month", "It already started"], "answer": "Monday"}]}, "part5": [{"sentence": "This is the building ___ our new office will be located.", "choices": ["where", "which", "when", "that"], "answer": "where", "grammar_point": "관계부사: 선행사(building, 장소)+완전한 문장 → where"}, {"sentence": "Monday is the day ___ the renovation will begin.", "choices": ["where", "when", "which", "why"], "answer": "when", "grammar_point": "관계부사: 선행사(day, 시간)+완전한 문장 → when"}, {"sentence": "That is the reason ___ the tenant decided not to renew the lease.", "choices": ["where", "when", "why", "which"], "answer": "why", "grammar_point": "관계부사: 선행사(reason)+완전한 문장 → why"}], "part7": {"passage": "Facility Notice: The building lobby will undergo renovation from Monday to Friday. During this time, the main entrance will be closed and tenants should use the side entrance. Maintenance will also inspect all utility systems.", "questions": [{"q": "What should tenants do during the renovation?", "choices": ["Work from home", "Use the side entrance", "Move to a new office", "Contact maintenance"], "answer": "Use the side entrance", "paraphrase_note": "지문의 'tenants should use the side entrance'가 선지에 그대로 반복"}, {"q": "What will maintenance inspect?", "choices": ["The parking lot", "Utility systems", "The lease agreements", "The tenant list"], "answer": "Utility systems", "paraphrase_note": "지문의 'inspect all utility systems'가 선지의 'Utility systems'로 직접 매칭"}]}}, "day15": {"theme": "이벤트/컨퍼런스", "grammar_point": "to부정사", "vocab": [{"word": "conference", "pos": "n.", "meaning": "컨퍼런스, 회의", "collocation": "attend a conference", "memory_tip": "con(함께)+fer(가져오다) → 함께 의견을 가져옴", "example": "The annual conference is in May."}, {"word": "keynote speaker", "pos": "n.", "meaning": "기조연설자", "collocation": "invite a keynote speaker", "memory_tip": "key(핵심)+note(발언) → 핵심 메시지를 전하는 사람", "example": "The keynote speaker was inspiring."}, {"word": "registration", "pos": "n.", "meaning": "등록", "collocation": "complete registration", "memory_tip": "register(등록하다)+ation", "example": "Registration closes on Friday."}, {"word": "banquet", "pos": "n.", "meaning": "연회", "collocation": "a welcome banquet", "memory_tip": "프랑스어 banc(긴 의자)에서 유래 → 긴 식탁의 연회", "example": "The banquet will be held in the ballroom."}, {"word": "sponsor", "pos": "n./v.", "meaning": "후원(하다)", "collocation": "corporate sponsor", "memory_tip": "spond(약속하다) → 지원을 약속한 사람", "example": "Three companies sponsored the event."}, {"word": "seminar", "pos": "n.", "meaning": "세미나", "collocation": "attend a seminar", "memory_tip": "라틴어 seminarium(모판)에서 유래 → 지식을 키우는 자리", "example": "She attended a marketing seminar."}, {"word": "workshop", "pos": "n.", "meaning": "워크숍", "collocation": "sign up for a workshop", "memory_tip": "work(작업)+shop(공방) → 실습하는 공방", "example": "The workshop covers data analysis."}, {"word": "participant", "pos": "n.", "meaning": "참가자", "collocation": "all participants", "memory_tip": "part(부분)+cip(취하다) → 참여를 취하는 사람", "example": "Over 500 participants registered."}, {"word": "itinerary", "pos": "n.", "meaning": "행사 일정", "collocation": "the event itinerary", "memory_tip": "Day4 복습: iter(길)+ary", "example": "The itinerary includes several panel talks."}, {"word": "venue", "pos": "n.", "meaning": "장소", "collocation": "book a venue", "memory_tip": "Day2 복습: venire(오다)", "example": "The venue holds up to 1,000 guests."}, {"word": "panel discussion", "pos": "n.", "meaning": "패널 토론", "collocation": "join a panel discussion", "memory_tip": "panel(패널단)+discussion(토론)", "example": "The panel discussion covered industry trends."}, {"word": "exhibitor", "pos": "n.", "meaning": "전시업체", "collocation": "exhibitor booth", "memory_tip": "exhibit(전시하다)+or", "example": "Over 100 exhibitors joined the trade show."}, {"word": "badge", "pos": "n.", "meaning": "출입증, 배지", "collocation": "wear a badge", "memory_tip": "고대 프랑스어 bage(표시)에서 유래", "example": "All attendees must wear a badge."}, {"word": "networking", "pos": "n.", "meaning": "네트워킹, 교류", "collocation": "a networking session", "memory_tip": "network(관계망)+ing", "example": "The networking session was very productive."}, {"word": "agenda", "pos": "n.", "meaning": "일정표", "collocation": "check the agenda", "memory_tip": "Day2 복습: ag(행하다)+enda", "example": "Please check the event agenda beforehand."}, {"word": "capacity", "pos": "n.", "meaning": "수용 인원", "collocation": "reach full capacity", "memory_tip": "capac(담다)+ity → 담을 수 있는 양", "example": "The hall reached full capacity by noon."}, {"word": "rsvp", "pos": "v.", "meaning": "참석 여부를 회신하다", "collocation": "rsvp by Friday", "memory_tip": "프랑스어 'répondez s'il vous plaît'(회신 바랍니다)의 약자", "example": "Please RSVP by Friday."}, {"word": "moderator", "pos": "n.", "meaning": "사회자, 진행자", "collocation": "act as moderator", "memory_tip": "moderate(조절하다)+or", "example": "She served as the panel's moderator."}, {"word": "breakout session", "pos": "n.", "meaning": "분과 세션", "collocation": "join a breakout session", "memory_tip": "breakout(따로 나뉜)+session", "example": "Attendees chose from five breakout sessions."}, {"word": "catering", "pos": "n.", "meaning": "출장 연회 서비스", "collocation": "arrange catering", "memory_tip": "cater(음식을 공급하다)+ing", "example": "Catering was arranged for the banquet."}, {"word": "turnout", "pos": "n.", "meaning": "참석 인원, 참가율", "collocation": "a large turnout", "memory_tip": "turn(나오다)+out(밖으로)", "example": "The event had a large turnout."}, {"word": "logistics", "pos": "n.", "meaning": "행사 준비 실무", "collocation": "handle event logistics", "memory_tip": "Day9 복습: logi+stics", "example": "The team handled all event logistics."}, {"word": "credential", "pos": "n.", "meaning": "출입 인증, 자격 증명", "collocation": "check credentials", "memory_tip": "Day6 복습: cred(믿다)+ential", "example": "Security checked everyone's credentials."}, {"word": "keynote address", "pos": "n.", "meaning": "기조연설", "collocation": "deliver a keynote address", "memory_tip": "keynote(핵심)+address(연설)", "example": "The CEO delivered the keynote address."}, {"word": "post-event survey", "pos": "n.", "meaning": "행사 후 설문", "collocation": "complete a post-event survey", "memory_tip": "post(이후)+event+survey", "example": "Attendees filled out a post-event survey."}], "lc_dialogue": {"script": "A: Have you completed the conference registration?\nB: Yes, and I signed up for the morning workshop too.\nA: Who is the keynote speaker this year?\nB: A well-known economist is sponsoring and speaking.", "questions": [{"q": "What did B sign up for besides registration?", "choices": ["A banquet", "A workshop", "A seminar", "A tour"], "answer": "A workshop"}, {"q": "What role does the economist have?", "choices": ["Only sponsoring", "Only speaking", "Sponsoring and speaking", "Neither"], "answer": "Sponsoring and speaking"}]}, "part5": [{"sentence": "Please complete your registration ___ guarantee a seat at the conference.", "choices": ["to", "for", "that", "so"], "answer": "to", "grammar_point": "to부정사(목적): '~하기 위해서' → to 동사원형"}, {"sentence": "The panel was scheduled ___ discuss industry trends.", "choices": ["to", "for", "with", "that"], "answer": "to", "grammar_point": "to부정사: be scheduled to + 동사원형 (예정되다)"}, {"sentence": "It is important ___ arrive early to secure a good seat.", "choices": ["to", "for", "that", "of"], "answer": "to", "grammar_point": "to부정사(가주어-진주어): It is + 형용사 + to부정사"}], "part7": {"passage": "Conference Announcement: This year's annual conference will be held on May 15-16. Registration includes access to all seminars, a welcome banquet, and a workshop with our keynote speaker. Early registration ends April 20.", "questions": [{"q": "What does registration include?", "choices": ["Only the banquet", "Only the workshop", "Seminars, banquet, and workshop", "Hotel accommodation"], "answer": "Seminars, banquet, and workshop", "paraphrase_note": "지문의 'access to all seminars, a welcome banquet, and a workshop'을 종합해 선지로 재구성"}, {"q": "When does early registration end?", "choices": ["April 20", "May 15", "May 16", "It has no deadline"], "answer": "April 20", "paraphrase_note": "지문의 'Early registration ends April 20'이 선지에 그대로 반복 - 숫자 오답 함정(May 15/16은 행사일)"}]}}, "day16": {"theme": "은행/금융", "grammar_point": "동명사", "vocab": [{"word": "deposit", "pos": "n./v.", "meaning": "예금(하다)", "collocation": "make a deposit", "memory_tip": "de(아래로)+posit(놓다) → 아래에 놓아 맡김", "example": "She made a deposit at the bank."}, {"word": "withdraw", "pos": "v.", "meaning": "인출하다", "collocation": "withdraw cash", "memory_tip": "with(뒤로)+draw(끌다) → 뒤로 끌어냄", "example": "He withdrew cash from the ATM."}, {"word": "interest rate", "pos": "n.", "meaning": "이자율", "collocation": "a low interest rate", "memory_tip": "interest(이자)+rate(비율)", "example": "The interest rate rose this year."}, {"word": "loan", "pos": "n.", "meaning": "대출", "collocation": "apply for a loan", "memory_tip": "lend(빌려주다)와 관련", "example": "They applied for a business loan."}, {"word": "transaction", "pos": "n.", "meaning": "거래", "collocation": "an online transaction", "memory_tip": "trans(넘어서)+act(행동하다) → 넘나드는 거래 행위", "example": "The transaction was completed online."}, {"word": "account balance", "pos": "n.", "meaning": "계좌 잔액", "collocation": "check the balance", "memory_tip": "account(계좌)+balance(균형/잔액)", "example": "Check your account balance regularly."}, {"word": "installment", "pos": "n.", "meaning": "할부(금)", "collocation": "pay in installments", "memory_tip": "install(설치하다)와 다른 어원, stall(자리)에서 나눠 지불", "example": "Pay in monthly installments."}, {"word": "overdraft", "pos": "n.", "meaning": "초과 인출", "collocation": "avoid an overdraft", "memory_tip": "over(초과)+draft(인출) → 초과해서 인출함", "example": "The account went into overdraft."}, {"word": "mortgage", "pos": "n.", "meaning": "주택담보대출", "collocation": "pay off a mortgage", "memory_tip": "mort(죽음)+gage(담보) → 빚이 끝날 때까지의 약속", "example": "They took out a 30-year mortgage."}, {"word": "collateral", "pos": "n.", "meaning": "담보", "collocation": "offer collateral", "memory_tip": "col(함께)+later(옆) → 옆에 함께 두는 보증물", "example": "The bank required collateral for the loan."}, {"word": "creditworthy", "pos": "adj.", "meaning": "신용이 있는", "collocation": "a creditworthy applicant", "memory_tip": "credit(신용)+worthy(가치있는)", "example": "Only creditworthy applicants are approved."}, {"word": "premium", "pos": "n.", "meaning": "보험료, 프리미엄", "collocation": "pay a premium", "memory_tip": "premium=최상급의, 웃돈", "example": "Monthly insurance premiums increased."}, {"word": "dividend", "pos": "n.", "meaning": "배당금", "collocation": "pay a dividend", "memory_tip": "divide(나누다)+end → 이익을 나눠준 것", "example": "Shareholders received a dividend this quarter."}, {"word": "portfolio", "pos": "n.", "meaning": "투자 포트폴리오", "collocation": "diversify a portfolio", "memory_tip": "이탈리아어 portafoglio(서류가방)에서 유래", "example": "She diversified her investment portfolio."}, {"word": "currency", "pos": "n.", "meaning": "통화, 화폐", "collocation": "exchange currency", "memory_tip": "current(흐르는)+cy → 흐르며 유통되는 것", "example": "Exchange rates for the currency fluctuated."}, {"word": "statement", "pos": "n.", "meaning": "명세서", "collocation": "a bank statement", "memory_tip": "state(진술하다)+ment", "example": "Review your monthly statement carefully."}, {"word": "asset management", "pos": "n.", "meaning": "자산 관리", "collocation": "an asset management firm", "memory_tip": "asset(자산)+management(관리)", "example": "She works at an asset management firm."}, {"word": "underwrite", "pos": "v.", "meaning": "인수하다, 보증하다", "collocation": "underwrite a loan", "memory_tip": "under(아래에)+write(쓰다) → 보증서 아래에 서명함", "example": "The bank underwrote the mortgage."}, {"word": "default", "pos": "v./n.", "meaning": "채무불이행(하다)", "collocation": "default on a loan", "memory_tip": "de(부족)+fault(잘못) → 이행하지 못한 잘못", "example": "The borrower defaulted on the loan."}, {"word": "principal", "pos": "n.", "meaning": "원금", "collocation": "repay the principal", "memory_tip": "principal(주된)의 뜻이 '원금'으로 확장", "example": "Payments cover both interest and principal."}, {"word": "equity", "pos": "n.", "meaning": "자기자본, 지분", "collocation": "home equity", "memory_tip": "equal(같은)+ity → 공평하게 소유한 몫", "example": "The company raised funds through equity."}, {"word": "fiscal policy", "pos": "n.", "meaning": "재정 정책", "collocation": "adjust fiscal policy", "memory_tip": "Day8 복습: fiscal(회계의)+policy", "example": "The government adjusted its fiscal policy."}, {"word": "wire transfer", "pos": "n.", "meaning": "계좌 이체", "collocation": "send a wire transfer", "memory_tip": "wire(전신)+transfer(이체) → 전신으로 보내던 것에서 유래", "example": "The payment was made via wire transfer."}, {"word": "audit trail", "pos": "n.", "meaning": "감사 기록", "collocation": "maintain an audit trail", "memory_tip": "audit(감사)+trail(흔적)", "example": "The system keeps a full audit trail."}, {"word": "solvency", "pos": "n.", "meaning": "지불 능력", "collocation": "maintain solvency", "memory_tip": "solvent(지불능력 있는)+cy", "example": "The bank monitors client solvency."}], "lc_dialogue": {"script": "A: I'd like to apply for a business loan.\nB: Sure, what interest rate are you hoping for?\nA: The lowest possible, and I'd like to pay in installments.\nB: Let me check your account balance first.", "questions": [{"q": "What does A want to apply for?", "choices": ["A deposit account", "A business loan", "A new card", "An overdraft"], "answer": "A business loan"}, {"q": "How does A want to pay?", "choices": ["All at once", "In installments", "By check", "In cash"], "answer": "In installments"}]}, "part5": [{"sentence": "___ money regularly is a good financial habit.", "choices": ["Saving", "Saved", "To save", "Save"], "answer": "Saving", "grammar_point": "동명사: 문장 주어 자리 → 동명사(Saving)가 명사처럼 쓰임"}, {"sentence": "The bank is responsible for ___ customer transactions securely.", "choices": ["process", "processing", "processed", "to process"], "answer": "processing", "grammar_point": "동명사: 전치사(for) 뒤에는 동명사"}, {"sentence": "He avoided ___ an overdraft by monitoring his balance.", "choices": ["having", "have", "to have", "had"], "answer": "having", "grammar_point": "동명사: avoid는 동명사를 목적어로 취하는 동사"}], "part7": {"passage": "Bank Notice: Starting next month, interest rates on savings accounts will increase by 0.5 percent. Customers may also apply for business loans with flexible installment plans. Visit any branch or check your account balance online.", "questions": [{"q": "What will change next month?", "choices": ["Branch hours", "Interest rates", "ATM locations", "Loan applications will stop"], "answer": "Interest rates", "paraphrase_note": "지문의 'interest rates... will increase'가 선지의 'Interest rates'로 직접 매칭"}, {"q": "What can customers apply for?", "choices": ["A credit card", "A business loan", "An overdraft", "A new account"], "answer": "A business loan", "paraphrase_note": "지문의 'apply for business loans'가 선지에 그대로 반복"}]}}, "day17": {"theme": "생산/재고 관리", "grammar_point": "분사 (현재분사/과거분사)", "vocab": [{"word": "stock", "pos": "n.", "meaning": "재고", "collocation": "out of stock", "memory_tip": "stock=비축한 것", "example": "We are out of stock on that item."}, {"word": "replenish", "pos": "v.", "meaning": "보충하다", "collocation": "replenish supplies", "memory_tip": "re(다시)+plenish(채우다, plenty) → 다시 가득 채움", "example": "We need to replenish our supplies."}, {"word": "surplus", "pos": "n.", "meaning": "잉여, 초과분", "collocation": "a surplus of goods", "memory_tip": "Day8 복습: sur(위로)+plus(더함)", "example": "There is a surplus of raw materials."}, {"word": "shortage", "pos": "n.", "meaning": "부족", "collocation": "a shortage of parts", "memory_tip": "short(부족한)+age", "example": "A shortage of parts delayed production."}, {"word": "demand", "pos": "n.", "meaning": "수요", "collocation": "high demand", "memory_tip": "de(강조)+mand(명령하다) → 강하게 요구함", "example": "Demand for the product is high."}, {"word": "forecast", "pos": "n./v.", "meaning": "예측(하다)", "collocation": "a sales forecast", "memory_tip": "fore(미리)+cast(던지다) → 미리 던져 예상함", "example": "Sales forecast looks positive."}, {"word": "procurement", "pos": "n.", "meaning": "조달", "collocation": "the procurement team", "memory_tip": "pro(앞으로)+cure(돌보다) → 앞서 확보함", "example": "The procurement team ordered new parts."}, {"word": "distribute", "pos": "v.", "meaning": "유통하다, 배포하다", "collocation": "distribute products", "memory_tip": "dis(나눠서)+tribute(주다) → 나누어 줌", "example": "Products are distributed nationwide."}, {"word": "restock", "pos": "v.", "meaning": "재입고하다", "collocation": "restock shelves", "memory_tip": "re(다시)+stock(재고)", "example": "The shelves were restocked overnight."}, {"word": "obsolete", "pos": "adj.", "meaning": "구식의, 진부화된", "collocation": "obsolete inventory", "memory_tip": "ob(향하여)+solete(닳다) → 낡아서 못 씀", "example": "The old inventory system is now obsolete."}, {"word": "turnaround", "pos": "n.", "meaning": "처리 소요시간", "collocation": "a fast turnaround", "memory_tip": "turn(돌다)+around → 처리해서 돌려주는 시간", "example": "The supplier offers a quick turnaround."}, {"word": "lead time", "pos": "n.", "meaning": "리드타임, 조달 소요기간", "collocation": "reduce lead time", "memory_tip": "lead(이끌다)+time → 앞서 필요한 준비 시간", "example": "Lead time increased due to the shortage."}, {"word": "bulk order", "pos": "n.", "meaning": "대량 주문", "collocation": "place a bulk order", "memory_tip": "bulk(대량)+order(주문)", "example": "The bulk order qualifies for a discount."}, {"word": "spare parts", "pos": "n.", "meaning": "예비 부품", "collocation": "stock spare parts", "memory_tip": "spare(여분의)+parts(부품)", "example": "We keep spare parts in the warehouse."}, {"word": "forecasted", "pos": "adj.", "meaning": "예측된", "collocation": "forecasted demand", "memory_tip": "forecast(예측하다)+ed", "example": "Forecasted demand exceeded actual sales."}, {"word": "allocate", "pos": "v.", "meaning": "배정하다", "collocation": "allocate inventory", "memory_tip": "Day8 복습: al+locate", "example": "Inventory was allocated to each store."}, {"word": "just-in-time", "pos": "adj.", "meaning": "적시생산방식의", "collocation": "just-in-time delivery", "memory_tip": "필요한 순간(just in time)에 맞춰 공급", "example": "The factory uses just-in-time delivery."}, {"word": "warehouse management", "pos": "n.", "meaning": "창고 관리", "collocation": "a warehouse management system", "memory_tip": "warehouse(창고)+management(관리)", "example": "The warehouse management system tracks stock."}, {"word": "stocktaking", "pos": "n.", "meaning": "재고 조사", "collocation": "conduct stocktaking", "memory_tip": "stock(재고)+taking(파악하기)", "example": "Annual stocktaking begins next week."}, {"word": "reorder point", "pos": "n.", "meaning": "재주문 시점", "collocation": "set a reorder point", "memory_tip": "re(다시)+order(주문)+point(지점)", "example": "The system alerts staff at the reorder point."}, {"word": "obsolescence", "pos": "n.", "meaning": "진부화", "collocation": "inventory obsolescence", "memory_tip": "obsolete(구식의)+ence", "example": "Fast-changing tech causes rapid obsolescence."}, {"word": "supply chain", "pos": "n.", "meaning": "공급망", "collocation": "manage the supply chain", "memory_tip": "supply(공급)+chain(사슬)", "example": "The supply chain was disrupted by weather."}, {"word": "safety stock", "pos": "n.", "meaning": "안전 재고", "collocation": "maintain safety stock", "memory_tip": "safety(안전)+stock(재고)", "example": "Safety stock prevents shortages."}, {"word": "throughput time", "pos": "n.", "meaning": "처리 소요시간", "collocation": "reduce throughput time", "memory_tip": "throughput(처리량)+time", "example": "Throughput time improved with automation."}, {"word": "consignment stock", "pos": "n.", "meaning": "위탁 재고", "collocation": "manage consignment stock", "memory_tip": "consignment(위탁)+stock(재고)", "example": "Consignment stock remains the supplier's property."}], "lc_dialogue": {"script": "A: We're facing a shortage of raw materials.\nB: The procurement team is trying to replenish stock.\nA: What does the demand forecast look like?\nB: It's high, so we need to distribute quickly once ready.", "questions": [{"q": "What problem are they facing?", "choices": ["A surplus", "A shortage", "Low demand", "Low forecast"], "answer": "A shortage"}, {"q": "What does the demand forecast show?", "choices": ["Low demand", "High demand", "No change", "Unclear"], "answer": "High demand"}]}, "part5": [{"sentence": "The report ___ by the procurement team shows a supply shortage.", "choices": ["prepare", "prepared", "preparing", "to prepare"], "answer": "prepared", "grammar_point": "분사: report는 '준비되는' 대상 → 과거분사(수동)"}, {"sentence": "Employees ___ in inventory management should attend the training.", "choices": ["involve", "involved", "involving", "to involve"], "answer": "involved", "grammar_point": "분사: employees는 '관련되는' 대상 → 과거분사(수동)"}, {"sentence": "The shipment ___ delayed materials arrived this morning.", "choices": ["contain", "contained", "containing", "to contain"], "answer": "containing", "grammar_point": "분사: shipment가 자재를 '포함하는' 능동 → 현재분사"}], "part7": {"passage": "Inventory Update: Due to high demand, several popular items are experiencing a temporary shortage. Our procurement team is working to replenish stock, with new shipments expected to arrive and be distributed within two weeks.", "questions": [{"q": "Why is there a shortage?", "choices": ["Low demand", "High demand", "A shipping error", "A price increase"], "answer": "High demand", "paraphrase_note": "지문의 'Due to high demand'가 선지에 그대로 반복"}, {"q": "When are new shipments expected?", "choices": ["One week", "Two weeks", "One month", "Immediately"], "answer": "Two weeks", "paraphrase_note": "지문의 'expected to arrive... within two weeks'가 선지에 그대로 반복"}]}}, "day18": {"theme": "건강/복지", "grammar_point": "분사구문", "vocab": [{"word": "benefits", "pos": "n.", "meaning": "복지 혜택", "collocation": "health benefits", "memory_tip": "bene(좋은)+fit(만들다) → 좋게 만들어주는 것", "example": "The job offers great health benefits."}, {"word": "insurance", "pos": "n.", "meaning": "보험", "collocation": "health insurance", "memory_tip": "in(안전하게)+sure(확실한) → 안전을 확실히 함", "example": "The company provides health insurance."}, {"word": "sick leave", "pos": "n.", "meaning": "병가", "collocation": "take sick leave", "memory_tip": "sick(아픈)+leave(휴가)", "example": "He took two days of sick leave."}, {"word": "wellness", "pos": "n.", "meaning": "건강, 웰빙", "collocation": "a wellness program", "memory_tip": "well(건강한)+ness", "example": "The company started a wellness program."}, {"word": "eligible", "pos": "adj.", "meaning": "자격이 있는", "collocation": "eligible for benefits", "memory_tip": "e(밖으로)+lig(선택하다) → 선택될 자격이 있는", "example": "Full-time staff are eligible for benefits."}, {"word": "coverage", "pos": "n.", "meaning": "보장 범위", "collocation": "full coverage", "memory_tip": "cover(보장하다)+age", "example": "The insurance offers full coverage."}, {"word": "claim", "pos": "n./v.", "meaning": "청구(하다)", "collocation": "file a claim", "memory_tip": "clam(외치다)와 관련 → 권리를 소리내어 주장", "example": "She filed an insurance claim."}, {"word": "enroll", "pos": "v.", "meaning": "등록하다, 가입하다", "collocation": "enroll in a program", "memory_tip": "en(만들다)+roll(명부) → 명부에 이름을 올리다", "example": "New employees enroll in benefits."}, {"word": "premium", "pos": "n.", "meaning": "보험료", "collocation": "monthly premium", "memory_tip": "Day16 복습: premium=웃돈", "example": "The premium increased slightly this year."}, {"word": "deductible", "pos": "n.", "meaning": "자기부담금", "collocation": "pay the deductible", "memory_tip": "deduct(공제하다)+ible → 먼저 공제되는 금액", "example": "You must pay the deductible before coverage begins."}, {"word": "dependent", "pos": "n.", "meaning": "부양가족", "collocation": "add a dependent", "memory_tip": "depend(의존하다)+ent → 의존하는 사람", "example": "You can add a dependent to your plan."}, {"word": "checkup", "pos": "n.", "meaning": "건강검진", "collocation": "an annual checkup", "memory_tip": "check(확인하다)+up", "example": "Employees receive a free annual checkup."}, {"word": "prescription", "pos": "n.", "meaning": "처방전", "collocation": "fill a prescription", "memory_tip": "pre(미리)+script(쓰다) → 미리 써준 것", "example": "The prescription is covered by insurance."}, {"word": "reimbursement", "pos": "n.", "meaning": "환급, 상환", "collocation": "request reimbursement", "memory_tip": "Day8 복습: re+im+burse(지갑)", "example": "Submit receipts for reimbursement."}, {"word": "wellbeing", "pos": "n.", "meaning": "복지, 안녕", "collocation": "employee wellbeing", "memory_tip": "well(잘)+being(존재)", "example": "The program supports employee wellbeing."}, {"word": "parental leave", "pos": "n.", "meaning": "육아휴직", "collocation": "take parental leave", "memory_tip": "parent(부모)+al+leave(휴가)", "example": "The company extended parental leave to six months."}, {"word": "flexible spending account", "pos": "n.", "meaning": "유연 지출 계좌", "collocation": "use a flexible spending account", "memory_tip": "flexible(유연한)+spending(지출)+account(계좌)", "example": "Employees can use a flexible spending account."}, {"word": "preventive care", "pos": "n.", "meaning": "예방 진료", "collocation": "receive preventive care", "memory_tip": "prevent(예방하다)+ive+care", "example": "The plan covers preventive care fully."}, {"word": "ergonomic", "pos": "adj.", "meaning": "인체공학적인", "collocation": "an ergonomic chair", "memory_tip": "ergo(일)+nomic(법칙) → 일의 효율/편안함을 위한", "example": "The office provides ergonomic chairs."}, {"word": "burnout", "pos": "n.", "meaning": "번아웃, 소진", "collocation": "prevent burnout", "memory_tip": "burn(타다)+out(다 타버림)", "example": "The program helps prevent employee burnout."}, {"word": "counseling", "pos": "n.", "meaning": "상담", "collocation": "employee counseling", "memory_tip": "counsel(상담하다)+ing", "example": "Free counseling services are available."}, {"word": "accommodation", "pos": "n.", "meaning": "편의 제공, 배려", "collocation": "a workplace accommodation", "memory_tip": "accommodate(수용하다)+ion", "example": "The company provided a workplace accommodation."}, {"word": "vested", "pos": "adj.", "meaning": "확정된, 기득권의", "collocation": "fully vested benefits", "memory_tip": "vest(부여하다)+ed → 권리가 완전히 부여된", "example": "Retirement benefits become fully vested after five years."}, {"word": "premium plan", "pos": "n.", "meaning": "고급형 보험 플랜", "collocation": "upgrade to the premium plan", "memory_tip": "premium(고급의)+plan(계획)", "example": "She upgraded to the premium health plan."}, {"word": "telehealth", "pos": "n.", "meaning": "원격 진료", "collocation": "access telehealth services", "memory_tip": "tele(원격)+health(건강)", "example": "Telehealth services expanded during the pandemic."}], "lc_dialogue": {"script": "A: Am I eligible for the new wellness program?\nB: Yes, all full-time employees can enroll.\nA: Does it include better insurance coverage?\nB: It does, and claims are processed faster now.", "questions": [{"q": "Who is eligible for the wellness program?", "choices": ["Only managers", "Full-time employees", "New hires only", "Part-time staff"], "answer": "Full-time employees"}, {"q": "What has improved with the program?", "choices": ["Salary", "Insurance coverage", "Working hours", "Vacation days"], "answer": "Insurance coverage"}]}, "part5": [{"sentence": "___ enrolled in the wellness program, employees receive a free checkup.", "choices": ["Once", "Once being", "Having been", "To be"], "answer": "Having been", "grammar_point": "분사구문: 완료 수동 분사구문 (Having been + p.p.)"}, {"sentence": "___ their claims quickly, employees reported high satisfaction.", "choices": ["Processing", "Processed", "To process", "Process"], "answer": "Processed", "grammar_point": "분사구문: claims가 '처리되는' 대상(수동) → 과거분사로 시작"}, {"sentence": "___ for benefits, new hires must submit a form within two weeks.", "choices": ["Applying", "Applied", "To apply", "Apply"], "answer": "Applying", "grammar_point": "분사구문: 신입사원이 '신청하는' 능동 주체 → 현재분사로 시작"}], "part7": {"passage": "HR Announcement: Starting next month, all full-time employees will be eligible for an expanded wellness program, including better insurance coverage. Employees can enroll online, and claims will be processed within five business days.", "questions": [{"q": "Who can enroll in the expanded program?", "choices": ["Part-time staff only", "Full-time employees", "Managers only", "New hires only"], "answer": "Full-time employees", "paraphrase_note": "지문의 'all full-time employees will be eligible'이 선지에 그대로 반복"}, {"q": "How long does claim processing take?", "choices": ["1 day", "5 business days", "2 weeks", "1 month"], "answer": "5 business days", "paraphrase_note": "지문의 'processed within five business days'가 선지에 그대로 반복"}]}}, "day19": {"theme": "환경/지속가능성", "grammar_point": "비교급/최상급", "vocab": [{"word": "sustainable", "pos": "adj.", "meaning": "지속 가능한", "collocation": "sustainable packaging", "memory_tip": "sus(아래에서)+tain(유지하다) → 계속 유지할 수 있는", "example": "We use sustainable packaging."}, {"word": "emission", "pos": "n.", "meaning": "배출", "collocation": "reduce emissions", "memory_tip": "e(밖으로)+mit(보내다) → 밖으로 내보냄", "example": "The factory reduced carbon emissions."}, {"word": "recycle", "pos": "v.", "meaning": "재활용하다", "collocation": "recycle materials", "memory_tip": "re(다시)+cycle(순환) → 다시 순환시킴", "example": "Please recycle all paper products."}, {"word": "eco-friendly", "pos": "adj.", "meaning": "친환경적인", "collocation": "eco-friendly products", "memory_tip": "eco(생태)+friendly(친화적인)", "example": "The new product line is eco-friendly."}, {"word": "renewable", "pos": "adj.", "meaning": "재생 가능한", "collocation": "renewable energy", "memory_tip": "re(다시)+new(새로운)+able", "example": "They invested in renewable energy."}, {"word": "regulation", "pos": "n.", "meaning": "규정", "collocation": "environmental regulation", "memory_tip": "regulate(규제하다)+ion", "example": "New environmental regulations apply."}, {"word": "waste", "pos": "n.", "meaning": "폐기물", "collocation": "reduce waste", "memory_tip": "waste=낭비, 버려지는 것", "example": "The plant reduced waste by 30 percent."}, {"word": "initiative", "pos": "n.", "meaning": "계획, 이니셔티브", "collocation": "a green initiative", "memory_tip": "initiate(시작하다)+ive → 시작하는 계획", "example": "The green initiative starts next year."}, {"word": "carbon footprint", "pos": "n.", "meaning": "탄소 발자국", "collocation": "reduce a carbon footprint", "memory_tip": "carbon(탄소)+footprint(발자국) → 남긴 흔적", "example": "The company aims to lower its carbon footprint."}, {"word": "biodegradable", "pos": "adj.", "meaning": "생분해성의", "collocation": "biodegradable packaging", "memory_tip": "bio(생물)+degrade(분해되다)+able", "example": "The packaging is fully biodegradable."}, {"word": "conservation", "pos": "n.", "meaning": "보존", "collocation": "energy conservation", "memory_tip": "conserve(보존하다)+ation", "example": "Energy conservation is a company priority."}, {"word": "greenhouse gas", "pos": "n.", "meaning": "온실가스", "collocation": "reduce greenhouse gas", "memory_tip": "greenhouse(온실)+gas", "example": "Greenhouse gas levels decreased this year."}, {"word": "pollutant", "pos": "n.", "meaning": "오염물질", "collocation": "reduce pollutants", "memory_tip": "pollute(오염시키다)+ant", "example": "New filters remove harmful pollutants."}, {"word": "solar panel", "pos": "n.", "meaning": "태양광 패널", "collocation": "install solar panels", "memory_tip": "solar(태양의)+panel(판)", "example": "Solar panels were installed on the roof."}, {"word": "compliance", "pos": "n.", "meaning": "준수", "collocation": "environmental compliance", "memory_tip": "comply(준수하다)+ance", "example": "The factory ensures full compliance."}, {"word": "footprint", "pos": "n.", "meaning": "(환경) 영향, 흔적", "collocation": "reduce its footprint", "memory_tip": "foot(발)+print(자국)", "example": "The company reduced its environmental footprint."}, {"word": "circular economy", "pos": "n.", "meaning": "순환 경제", "collocation": "promote a circular economy", "memory_tip": "circular(순환하는)+economy(경제)", "example": "The firm promotes a circular economy model."}, {"word": "carbon-neutral", "pos": "adj.", "meaning": "탄소 중립의", "collocation": "become carbon-neutral", "memory_tip": "carbon(탄소)+neutral(중립의)", "example": "The company aims to become carbon-neutral by 2030."}, {"word": "green certification", "pos": "n.", "meaning": "친환경 인증", "collocation": "earn green certification", "memory_tip": "green(친환경의)+certification(인증)", "example": "The building earned green certification."}, {"word": "environmental impact", "pos": "n.", "meaning": "환경 영향", "collocation": "assess environmental impact", "memory_tip": "environmental(환경의)+impact(영향)", "example": "They assessed the project's environmental impact."}, {"word": "biodiversity", "pos": "n.", "meaning": "생물다양성", "collocation": "protect biodiversity", "memory_tip": "bio(생물)+diversity(다양성)", "example": "The initiative aims to protect biodiversity."}, {"word": "single-use plastic", "pos": "n.", "meaning": "일회용 플라스틱", "collocation": "ban single-use plastic", "memory_tip": "single-use(일회용의)+plastic", "example": "The office banned single-use plastic."}, {"word": "carbon offset", "pos": "n.", "meaning": "탄소 상쇄", "collocation": "purchase carbon offsets", "memory_tip": "carbon(탄소)+offset(상쇄하다)", "example": "The airline offers carbon offset options."}, {"word": "clean energy", "pos": "n.", "meaning": "청정 에너지", "collocation": "invest in clean energy", "memory_tip": "clean(깨끗한)+energy(에너지)", "example": "The government invested in clean energy."}, {"word": "ecosystem", "pos": "n.", "meaning": "생태계", "collocation": "protect the local ecosystem", "memory_tip": "eco(생태)+system(체계)", "example": "The project protects the local ecosystem."}], "lc_dialogue": {"script": "A: Have you heard about our new sustainability initiative?\nB: Yes, we're switching to eco-friendly packaging.\nA: Will that reduce our carbon emissions too?\nB: Definitely, and we're also investing in renewable energy.", "questions": [{"q": "What is the company switching to?", "choices": ["Cheaper materials", "Eco-friendly packaging", "New suppliers", "Faster shipping"], "answer": "Eco-friendly packaging"}, {"q": "What else is the company investing in?", "choices": ["New offices", "Renewable energy", "More staff", "New regulations"], "answer": "Renewable energy"}]}, "part5": [{"sentence": "The new packaging is ___ eco-friendly than the previous version.", "choices": ["more", "most", "much", "very"], "answer": "more", "grammar_point": "비교급: than이 있으면 비교급(more+형용사)"}, {"sentence": "Solar energy is one of the ___ renewable resources available today.", "choices": ["cleaner", "cleanest", "clean", "more clean"], "answer": "cleanest", "grammar_point": "최상급: one of the + 최상급 + 복수명사"}, {"sentence": "This factory produces ___ emissions than any other in the region.", "choices": ["few", "fewer", "fewest", "less"], "answer": "fewer", "grammar_point": "비교급: emissions(가산명사 복수)+than → fewer 사용 (less는 불가산명사용)"}], "part7": {"passage": "Sustainability Report: This year, our company reduced waste by 30 percent and switched entirely to recyclable packaging. We also launched an initiative to use renewable energy in all factories by next year, in line with new regulations.", "questions": [{"q": "By how much was waste reduced?", "choices": ["10 percent", "20 percent", "30 percent", "50 percent"], "answer": "30 percent", "paraphrase_note": "지문의 'reduced waste by 30 percent'가 선지에 그대로 반복"}, {"q": "What is the goal for next year?", "choices": ["Hire more staff", "Use renewable energy in all factories", "Open new offices", "Lower prices"], "answer": "Use renewable energy in all factories", "paraphrase_note": "지문의 'initiative to use renewable energy in all factories by next year'가 선지에 그대로 반복"}]}}, "day20": {"theme": "복습 주간 (Day11~19 유형+문법 재시험)", "note": "문법 복습 순서: 전치사(시간)→전치사(장소)→관계대명사→관계부사→to부정사→동명사→분사→분사구문→비교급/최상급. 본책 진도 Day1~20이 완료되는 시점입니다. Day21부터는 실전모의고사(풀기/복습 교대) 구간이 시작됩니다.", "vocab_review": ["complaint", "upgrade", "manufacture", "lease", "conference", "deposit", "shortage", "benefits", "sustainable"], "vocab": []}, "day21": {"type": "풀기 (본책 모의고사 1회 - 축소판)", "timer": {"lc_minutes": 15, "rc_minutes": 20}, "lc": [{"script": "A: Could you send me the updated sales figures?\nB: I'll email them right after this meeting.", "q": "When will B send the figures?", "choices": ["Before the meeting", "Right after the meeting", "Tomorrow", "Next week"], "answer": "Right after the meeting"}, {"script": "A: The printer on the third floor isn't working.\nB: I'll call maintenance to fix it today.", "q": "What will B do?", "choices": ["Buy a new printer", "Call maintenance", "Move to another floor", "Fix it himself"], "answer": "Call maintenance"}, {"script": "A: Did you finish the quarterly report?\nB: Almost, I just need to add the charts.", "q": "What does B still need to do?", "choices": ["Write the summary", "Add the charts", "Print the report", "Email the report"], "answer": "Add the charts"}, {"script": "A: Our flight was delayed by two hours.\nB: Then we'll miss the connecting flight.", "q": "What is the result of the delay?", "choices": ["They will arrive early", "They will miss a connection", "The flight was canceled", "They changed airlines"], "answer": "They will miss a connection"}, {"script": "A: The new hire starts on Monday.\nB: I'll prepare her desk and login access.", "q": "What will B prepare?", "choices": ["A training manual", "Her desk and login access", "A welcome party", "A job offer"], "answer": "Her desk and login access"}, {"script": "A: Can we move the deadline to Friday?\nB: I'll check with the client first.", "q": "What will B do before answering?", "choices": ["Extend it immediately", "Check with the client", "Refuse the request", "Cancel the project"], "answer": "Check with the client"}, {"script": "A: The conference room is booked all afternoon.\nB: Let's use the smaller room on the second floor.", "q": "What does B suggest?", "choices": ["Canceling the meeting", "Using a different room", "Booking earlier", "Meeting online"], "answer": "Using a different room"}, {"script": "A: I can't access the shared drive.\nB: IT is updating the system right now.", "q": "Why can't A access the drive?", "choices": ["It was deleted", "IT is updating the system", "The password changed", "The drive is full"], "answer": "IT is updating the system"}, {"script": "A: Have the samples arrived from the supplier?\nB: Yes, they're in the warehouse now.", "q": "Where are the samples?", "choices": ["Still in transit", "In the warehouse", "At the supplier", "Returned"], "answer": "In the warehouse"}, {"script": "A: We need to renew the software license.\nB: I'll submit the request today.", "q": "What will B submit?", "choices": ["A complaint", "A license renewal request", "A new contract", "A refund request"], "answer": "A license renewal request"}], "part5": [{"sentence": "The manager will ___ the final decision by Friday.", "choices": ["make", "made", "making", "makes"], "answer": "make", "grammar_point": "동사자리: 조동사(will)+동사원형"}, {"sentence": "Employees are required to ___ their ID badges at all times.", "choices": ["wear", "wearing", "worn", "wears"], "answer": "wear", "grammar_point": "to부정사: required to + 동사원형"}, {"sentence": "The proposal was rejected ___ of its high cost.", "choices": ["because", "because of", "although", "despite"], "answer": "because of", "grammar_point": "전치사구: because of + 명사(cost)"}, {"sentence": "She has worked at the firm ___ five years.", "choices": ["for", "since", "during", "while"], "answer": "for", "grammar_point": "전치사(시간): 현재완료+기간 → for"}, {"sentence": "The report ___ by the finance team last week.", "choices": ["completed", "was completed", "completing", "completes"], "answer": "was completed", "grammar_point": "수동태: last week(과거)+by the finance team(행위자) → was+p.p."}], "part6": {"passage": "Dear Team, Please note that the office will be ___(1)___ on Monday for building maintenance. All employees should work from home. If you need ___(2)___ to the building, please contact security in advance. We apologize for ___(3)___ inconvenience.", "blanks": [{"num": 1, "choices": ["close", "closed", "closing", "closes"], "answer": "closed", "grammar_point": "수동태/분사: will be + p.p."}, {"num": 2, "choices": ["access", "accessing", "accessed", "accesses"], "answer": "access", "grammar_point": "명사자리: need + 명사(목적어)"}, {"num": 3, "choices": ["any", "some", "few", "little"], "answer": "any", "grammar_point": "부정문/사과 표현: apologize for any inconvenience (관용표현)"}]}, "part7": {"passage": "Office Memo: Effective next Monday, parking spaces on the ground floor will be reserved for visitors only. Employees should use the parking garage across the street. A shuttle will run every 15 minutes between the garage and the main entrance.", "questions": [{"q": "What is reserved for visitors?", "choices": ["The parking garage", "Ground floor parking", "The main entrance", "The shuttle"], "answer": "Ground floor parking", "paraphrase_note": "지문의 'parking spaces on the ground floor will be reserved for visitors'가 선지의 'Ground floor parking'으로 축약"}, {"q": "How often does the shuttle run?", "choices": ["Every 5 minutes", "Every 15 minutes", "Every 30 minutes", "Every hour"], "answer": "Every 15 minutes", "paraphrase_note": "지문의 'every 15 minutes'가 선지에 그대로 반복 - 숫자 정확히 확인하는 유형"}]}}, "day22": {"type": "복습", "note": "Day21 모의고사 채점 후 복습법 5단계 적용: ① 유형별 분류 ② 오답 해설 정독 ③ (다음날) 재확인 ④ 모르는 문법은 본책 복귀 ⑤ 정리. 앱에서는 이 Day에 Day21에서 틀린 문항만 모아 재풀이하는 '오답 재시험' 화면을 띄우세요."}, "day23": {"type": "풀기 (본책 모의고사 2회 - 축소판)", "timer": {"lc_minutes": 15, "rc_minutes": 20}, "lc": [{"script": "A: The client wants to reschedule tomorrow's call.\nB: What time works better for them?", "q": "What does B ask?", "choices": ["The location", "A better time", "The topic", "The client's name"], "answer": "A better time"}, {"script": "A: I ordered new chairs for the office.\nB: When will they be delivered?", "q": "What does B want to know?", "choices": ["The price", "The delivery date", "The color", "The quantity"], "answer": "The delivery date"}, {"script": "A: Our website crashed during the sale.\nB: IT is restoring it now.", "q": "What is IT doing?", "choices": ["Building a new site", "Restoring the website", "Canceling the sale", "Updating prices"], "answer": "Restoring the website"}, {"script": "A: Did the invoice get approved?\nB: Yes, accounting signed off this morning.", "q": "Who approved the invoice?", "choices": ["Marketing", "Accounting", "Sales", "IT"], "answer": "Accounting"}, {"script": "A: We're short on staff for the event.\nB: I'll ask a few volunteers to help.", "q": "What will B do?", "choices": ["Cancel the event", "Ask volunteers to help", "Hire new staff", "Postpone the event"], "answer": "Ask volunteers to help"}, {"script": "A: The training session ran long today.\nB: We'll finish the rest tomorrow morning.", "q": "When will the training finish?", "choices": ["Today", "Tomorrow morning", "Next week", "It's canceled"], "answer": "Tomorrow morning"}, {"script": "A: Can you review my draft before noon?\nB: I have a meeting, but I'll try.", "q": "Why might B be delayed?", "choices": ["A meeting", "A trip", "A phone call", "A deadline"], "answer": "A meeting"}, {"script": "A: The vendor raised their prices again.\nB: Let's look for a new supplier.", "q": "What does B suggest?", "choices": ["Negotiating the price", "Finding a new supplier", "Canceling the order", "Paying the new price"], "answer": "Finding a new supplier"}, {"script": "A: The elevator is out of service.\nB: We'll need to use the stairs today.", "q": "What must they do?", "choices": ["Wait for repair", "Use the stairs", "Use another building", "Cancel the meeting"], "answer": "Use the stairs"}, {"script": "A: Has the new intern finished the training?\nB: Not yet, she has one more module.", "q": "What does the intern still need?", "choices": ["A laptop", "One more module", "A supervisor", "A desk"], "answer": "One more module"}], "part5": [{"sentence": "The new policy will take effect ___ January 1.", "choices": ["on", "at", "in", "by"], "answer": "on", "grammar_point": "전치사(날짜): 특정 날짜엔 on"}, {"sentence": "The team worked ___ to meet the tight deadline.", "choices": ["hard", "hardly", "harder", "hardest"], "answer": "hard", "grammar_point": "부사자리 함정: hard(열심히, 부사) vs hardly(거의 ~않다) - 의미 구분 필수"}, {"sentence": "___ the rain, the outdoor event continued as planned.", "choices": ["Despite", "Although", "Because", "Since"], "answer": "Despite", "grammar_point": "전치사 vs 접속사: 뒤에 명사(rain)만 있으므로 전치사 Despite"}, {"sentence": "Each applicant must submit a resume ___ two references.", "choices": ["and", "with", "or", "but"], "answer": "with", "grammar_point": "전치사: '~와 함께' → with"}, {"sentence": "The equipment ___ regularly to prevent breakdowns.", "choices": ["is maintained", "maintains", "maintaining", "to maintain"], "answer": "is maintained", "grammar_point": "수동태: 장비는 '유지 관리를 받는' 대상 → is maintained"}], "part6": {"passage": "Dear Customer, Thank you for your recent purchase. Your order has been ___(1)___ and will arrive within 5 business days. If you have any questions, please ___(2)___ our support team. We hope you will be fully ___(3)___ with your purchase.", "blanks": [{"num": 1, "choices": ["ship", "shipped", "shipping", "ships"], "answer": "shipped", "grammar_point": "수동태: has been + p.p."}, {"num": 2, "choices": ["contact", "contacting", "contacted", "contacts"], "answer": "contact", "grammar_point": "명령문: please + 동사원형"}, {"num": 3, "choices": ["satisfy", "satisfied", "satisfying", "satisfaction"], "answer": "satisfied", "grammar_point": "형용사자리: be동사(be)+빈칸 → 감정 형용사(satisfied)"}]}, "part7": {"passage": "Product Recall Notice: Due to a manufacturing defect, all units of Model X250 sold between January and March are being recalled. Customers should stop using the product immediately and contact customer service for a full refund or replacement.", "questions": [{"q": "Why is the product being recalled?", "choices": ["Low sales", "A manufacturing defect", "A price change", "A packaging update"], "answer": "A manufacturing defect", "paraphrase_note": "지문의 'Due to a manufacturing defect'가 선지에 그대로 반복"}, {"q": "What should customers do?", "choices": ["Continue using it", "Contact customer service", "Return it to the factory", "Wait for a new model"], "answer": "Contact customer service", "paraphrase_note": "지문의 'contact customer service for a full refund or replacement'가 선지에 그대로 반복"}]}}, "day24": {"type": "복습", "note": "Day23 모의고사 오답노트 정리. 복습법 5단계 반복 적용."}, "day25": {"type": "풀기 (YBM 실전 1000 스타일 TEST 01 - 축소판)", "timer": {"lc_minutes": 15, "rc_minutes": 20}, "lc": [{"script": "A: The budget proposal needs revisions.\nB: I'll have it ready by tomorrow.", "q": "What does B promise?", "choices": ["A new proposal", "Revisions by tomorrow", "A meeting", "A refund"], "answer": "Revisions by tomorrow"}, {"script": "A: Our top client wants a discount.\nB: Let's offer 10 percent for bulk orders.", "q": "What does B propose?", "choices": ["A full refund", "A 10 percent discount", "Free shipping", "A new contract"], "answer": "A 10 percent discount"}, {"script": "A: The server went down again last night.\nB: We should upgrade our hosting plan.", "q": "What does B suggest?", "choices": ["Firing IT", "Upgrading the hosting plan", "Closing the website", "Hiring more staff"], "answer": "Upgrading the hosting plan"}, {"script": "A: When is the product launch event?\nB: It's set for the second week of October.", "q": "When is the launch event?", "choices": ["First week of October", "Second week of October", "Third week of October", "November"], "answer": "Second week of October"}, {"script": "A: I need approval for the travel expenses.\nB: Send the form to Ms. Park.", "q": "Who should A send the form to?", "choices": ["The client", "Ms. Park", "Accounting", "HR"], "answer": "Ms. Park"}, {"script": "A: The new logo design looks great.\nB: Let's present it to the board next week.", "q": "What will they do next week?", "choices": ["Redesign the logo", "Present it to the board", "Cancel the project", "Print the logo"], "answer": "Present it to the board"}, {"script": "A: Can you cover my shift on Saturday?\nB: Sure, as long as I can leave early.", "q": "What condition does B set?", "choices": ["Getting paid extra", "Leaving early", "Working from home", "Switching shifts"], "answer": "Leaving early"}, {"script": "A: The survey results are in.\nB: What percentage were satisfied?", "q": "What does B ask about?", "choices": ["The sample size", "The satisfaction percentage", "The survey date", "The survey cost"], "answer": "The satisfaction percentage"}, {"script": "A: We're expanding to a new city next year.\nB: Which city are we considering?", "q": "What does B want to know?", "choices": ["The budget", "The city name", "The timeline", "The staff count"], "answer": "The city name"}, {"script": "A: The contract renewal is due next week.\nB: I'll draft the updated terms today.", "q": "What will B do today?", "choices": ["Sign the contract", "Draft updated terms", "Cancel the contract", "Call the client"], "answer": "Draft updated terms"}], "part5": [{"sentence": "The company ___ its headquarters to a larger building last year.", "choices": ["relocate", "relocated", "relocating", "relocates"], "answer": "relocated", "grammar_point": "동사시제: last year(과거표현) → 과거시제"}, {"sentence": "Employees ___ complete the survey by Friday.", "choices": ["must", "should be", "are", "have"], "answer": "must", "grammar_point": "조동사: must+동사원형(complete)"}, {"sentence": "The workshop is designed ___ improve communication skills.", "choices": ["to", "for", "with", "of"], "answer": "to", "grammar_point": "to부정사(목적): '~하기 위해' → to+동사원형"}, {"sentence": "Sales increased ___ than expected this quarter.", "choices": ["more", "most", "much", "many"], "answer": "more", "grammar_point": "비교급: than expected → 비교급 more"}, {"sentence": "The manual explains ___ to operate the new machine.", "choices": ["how", "what", "why", "which"], "answer": "how", "grammar_point": "의문사+to부정사: how to + 동사원형 (방법)"}], "part6": {"passage": "To All Staff: We are pleased to announce a new training program ___(1)___ next month. The program will focus on leadership skills and is open to all employees ___(2)___ have worked here for at least one year. Please register ___(3)___ your supervisor by the end of this week.", "blanks": [{"num": 1, "choices": ["begin", "beginning", "began", "begins"], "answer": "beginning", "grammar_point": "분사: program을 수식하는 현재분사(시작하는)"}, {"num": 2, "choices": ["who", "which", "where", "when"], "answer": "who", "grammar_point": "관계대명사: 선행사(employees, 사람)+주격 → who"}, {"num": 3, "choices": ["with", "at", "on", "in"], "answer": "with", "grammar_point": "전치사(관용표현): register with + 대상"}]}, "part7": {"passage": "Training Announcement: A new leadership training program will begin next month, open to employees with at least one year of experience. Sessions will be held every Wednesday for eight weeks. Interested employees should register with their supervisor by Friday.", "questions": [{"q": "Who can join the program?", "choices": ["All new hires", "Employees with 1+ year of experience", "Only managers", "Only HR staff"], "answer": "Employees with 1+ year of experience", "paraphrase_note": "지문의 'open to employees with at least one year of experience'가 선지의 '1+ year of experience'로 패러프레이징"}, {"q": "How long does the program last?", "choices": ["Four weeks", "Six weeks", "Eight weeks", "Ten weeks"], "answer": "Eight weeks", "paraphrase_note": "지문의 'for eight weeks'가 선지에 그대로 반복"}]}}, "day26": {"type": "복습", "note": "Day25 모의고사 오답노트 정리. 문법 개념이 낯설면 해당 Day 본책으로 복귀."}, "day27": {"type": "풀기 (YBM 실전 1000 스타일 TEST 02 - 축소판)", "timer": {"lc_minutes": 15, "rc_minutes": 20}, "lc": [{"script": "A: Our booth at the trade show needs new banners.\nB: I'll order them this afternoon.", "q": "What will B order?", "choices": ["New chairs", "New banners", "New brochures", "New badges"], "answer": "New banners"}, {"script": "A: The quarterly numbers look strong.\nB: Yes, revenue is up 15 percent.", "q": "How much did revenue increase?", "choices": ["5 percent", "10 percent", "15 percent", "20 percent"], "answer": "15 percent"}, {"script": "A: Can we get an extension on the project?\nB: I'll ask the client, but no promises.", "q": "What will B do?", "choices": ["Grant the extension", "Ask the client", "Refuse the request", "End the project"], "answer": "Ask the client"}, {"script": "A: The copier is out of toner again.\nB: I'll order more supplies today.", "q": "What is the problem?", "choices": ["The copier is broken", "It's out of toner", "It's too slow", "It's being replaced"], "answer": "It's out of toner"}, {"script": "A: The new branch opens next Monday.\nB: Are all the staff hired yet?", "q": "What does B ask?", "choices": ["About the location", "About staffing", "About the budget", "About the opening date"], "answer": "About staffing"}, {"script": "A: I finished the market research report.\nB: Great, can you present it at Thursday's meeting?", "q": "What does B ask A to do?", "choices": ["Rewrite the report", "Present it Thursday", "Email it now", "Cancel the meeting"], "answer": "Present it Thursday"}, {"script": "A: The client canceled their order.\nB: Did they say why?", "q": "What does B want to know?", "choices": ["The order size", "The reason for cancellation", "The delivery date", "The refund amount"], "answer": "The reason for cancellation"}, {"script": "A: We need to update the employee handbook.\nB: HR is already working on it.", "q": "Who is working on the handbook?", "choices": ["Legal", "HR", "Marketing", "IT"], "answer": "HR"}, {"script": "A: The new software rollout starts Monday.\nB: Will there be training sessions?", "q": "What does B ask about?", "choices": ["The cost", "Training sessions", "The rollout date", "Technical support"], "answer": "Training sessions"}, {"script": "A: Our top competitor just lowered their prices.\nB: We should review our pricing strategy.", "q": "What does B suggest?", "choices": ["Ignoring it", "Reviewing pricing strategy", "Raising prices", "Contacting the competitor"], "answer": "Reviewing pricing strategy"}], "part5": [{"sentence": "The document must be signed ___ both parties.", "choices": ["by", "with", "for", "to"], "answer": "by", "grammar_point": "전치사(수동태 행위자): must be signed by"}, {"sentence": "The new hires received ___ training last week.", "choices": ["extensive", "extend", "extension", "extending"], "answer": "extensive", "grammar_point": "형용사자리: 빈칸+명사(training) → 형용사"}, {"sentence": "Neither the manager ___ the staff were informed of the change.", "choices": ["nor", "or", "and", "but"], "answer": "nor", "grammar_point": "상관접속사: neither A nor B"}, {"sentence": "The company's profits have grown ___ over the past decade.", "choices": ["steadily", "steady", "steadier", "steadiness"], "answer": "steadily", "grammar_point": "부사자리: 동사(have grown)를 꾸미는 부사"}, {"sentence": "This offer is valid ___ the end of the month.", "choices": ["until", "since", "for", "by"], "answer": "until", "grammar_point": "전치사(시간): '~까지 계속' → until"}], "part6": {"passage": "Dear Valued Customer, We are writing to inform you that your subscription will ___(1)___ next month. To continue enjoying our services without interruption, please renew ___(2)___ the link below. If you have any questions, our support team is ___(3)___ to help.", "blanks": [{"num": 1, "choices": ["expire", "expires", "expired", "expiring"], "answer": "expire", "grammar_point": "동사자리: will+동사원형"}, {"num": 2, "choices": ["by using", "use", "used", "using"], "answer": "by using", "grammar_point": "전치사구: by + 동명사(수단)"}, {"num": 3, "choices": ["ready", "readily", "readiness", "readier"], "answer": "ready", "grammar_point": "형용사자리: be동사(is)+빈칸 → 형용사(ready to help)"}]}, "part7": {"passage": "Subscription Reminder: Your annual subscription will expire on October 15. Renew before this date to avoid a service interruption and to keep your current discounted rate. New rates will apply to renewals made after the expiration date.", "questions": [{"q": "What happens if you renew after October 15?", "choices": ["Nothing changes", "New rates will apply", "Service continues free", "The account is deleted"], "answer": "New rates will apply", "paraphrase_note": "지문의 'New rates will apply to renewals made after the expiration date'가 선지에 그대로 반복"}, {"q": "What is the benefit of renewing early?", "choices": ["A free gift", "Keeping the current rate", "Extra storage", "A longer subscription"], "answer": "Keeping the current rate", "paraphrase_note": "지문의 'to keep your current discounted rate' → 선지의 'Keeping the current rate'로 축약"}]}}, "day28": {"type": "복습", "note": "Day27 모의고사 오답노트 정리."}, "day29": {"type": "풀기 (YBM 실전 1000 스타일 TEST 03 - 최종 모의고사, 축소판)", "timer": {"lc_minutes": 15, "rc_minutes": 20}, "condition_note": "실제 시험 당일과 같은 시간대에 응시하고 컨디션 관리를 시작하는 날입니다.", "lc": [{"script": "A: Is the annual report finalized?\nB: Almost, just waiting on the CFO's signature.", "q": "What is missing from the report?", "choices": ["Sales data", "The CFO's signature", "The cover page", "Charts"], "answer": "The CFO's signature"}, {"script": "A: We're launching in three new countries this year.\nB: Which region is the priority?", "q": "What does B ask?", "choices": ["The budget", "The priority region", "The launch date", "The staff count"], "answer": "The priority region"}, {"script": "A: My laptop keeps freezing during video calls.\nB: Let's get IT to check it today.", "q": "What will happen today?", "choices": ["A new laptop will be bought", "IT will check the laptop", "The calls will be canceled", "A refund will be issued"], "answer": "IT will check the laptop"}, {"script": "A: The client loved our proposal.\nB: That's great, let's schedule the contract signing.", "q": "What is the next step?", "choices": ["Revising the proposal", "Scheduling contract signing", "Ending the deal", "Lowering the price"], "answer": "Scheduling contract signing"}, {"script": "A: We ran out of promotional flyers.\nB: I'll print more before the event.", "q": "What will B do?", "choices": ["Cancel the event", "Print more flyers", "Order banners", "Reschedule"], "answer": "Print more flyers"}, {"script": "A: The audit found a small discrepancy.\nB: Finance is already looking into it.", "q": "Who is investigating the discrepancy?", "choices": ["HR", "Finance", "Legal", "Marketing"], "answer": "Finance"}, {"script": "A: Can we push the product demo to Thursday?\nB: I'll check if the client is available.", "q": "What will B check?", "choices": ["The product specs", "Client availability", "The demo script", "The venue"], "answer": "Client availability"}, {"script": "A: The warehouse needs more shelving.\nB: I'll get a quote from the supplier.", "q": "What will B do?", "choices": ["Build new shelves", "Get a supplier quote", "Move the warehouse", "Cancel the order"], "answer": "Get a supplier quote"}, {"script": "A: Our app just hit one million downloads.\nB: Let's announce it on social media.", "q": "What does B suggest?", "choices": ["A press conference", "A social media announcement", "A new update", "A price change"], "answer": "A social media announcement"}, {"script": "A: The vendor missed the delivery deadline.\nB: We should discuss penalties in our next call.", "q": "What will they discuss next?", "choices": ["A new vendor", "Penalties for the delay", "Canceling the order", "A refund"], "answer": "Penalties for the delay"}], "part5": [{"sentence": "The CEO will personally ___ the award to the winner.", "choices": ["present", "presents", "presenting", "presented"], "answer": "present", "grammar_point": "동사자리: 조동사(will)+동사원형"}, {"sentence": "This model is ___ more efficient than the previous version.", "choices": ["significantly", "significant", "signify", "significance"], "answer": "significantly", "grammar_point": "부사자리: 비교급(more efficient)을 강조하는 부사"}, {"sentence": "The team worked together ___ the project could be finished on time.", "choices": ["so that", "in order", "so as", "because"], "answer": "so that", "grammar_point": "종속접속사(목적): so that + 주어 + 동사(could)"}, {"sentence": "The proposal, ___ was submitted last week, is under review.", "choices": ["which", "who", "what", "whose"], "answer": "which", "grammar_point": "관계대명사: 선행사(proposal, 사물)+계속적 용법 → which"}, {"sentence": "Please ensure all data is backed up ___ the system update.", "choices": ["prior to", "after", "during", "since"], "answer": "prior to", "grammar_point": "전치사(시간 순서): '~에 앞서' → prior to"}], "part6": {"passage": "Dear Employees, As part of our year-end review, all performance evaluations must be ___(1)___ by December 15. Managers should schedule one-on-one meetings with each team member ___(2)___ discuss goals for next year. Please contact HR if you have any ___(3)___ questions.", "blanks": [{"num": 1, "choices": ["complete", "completed", "completing", "completes"], "answer": "completed", "grammar_point": "수동태: must be + p.p."}, {"num": 2, "choices": ["to", "for", "with", "of"], "answer": "to", "grammar_point": "to부정사(목적): meetings...to discuss"}, {"num": 3, "choices": ["additional", "addition", "additionally", "add"], "answer": "additional", "grammar_point": "형용사자리: 빈칸+명사(questions)"}]}, "part7": {"passage": "Year-End Notice: All performance evaluations must be completed by December 15. Managers are required to hold one-on-one meetings with each employee to discuss achievements and set goals for the upcoming year. Completed evaluations should be submitted to HR electronically.", "questions": [{"q": "What is the deadline for evaluations?", "choices": ["November 15", "December 1", "December 15", "January 1"], "answer": "December 15", "paraphrase_note": "지문의 'must be completed by December 15'가 선지에 그대로 반복"}, {"q": "How should evaluations be submitted?", "choices": ["By mail", "In person", "Electronically", "By fax"], "answer": "Electronically", "paraphrase_note": "지문의 'submitted to HR electronically'가 선지에 그대로 반복"}]}}, "day30": {"type": "복습 + 총정리", "note": "새 문제를 풀지 않고 지금까지의 오답노트 전체를 훑으며 자주 틀리는 패턴 3~5개만 골라 마지막까지 기억합니다. 문법 포인트 전체 복습 순서(Day1~19): 명사자리→동사자리→형용사자리→부사자리→시제(단순/완료)→수동태→등위/상관접속사→종속접속사→전치사(시간/장소)→관계대명사→관계부사→to부정사→동명사→분사→분사구문→비교급/최상급. 컨디션 유지가 최우선인 날입니다. 앱에서는 이 Day에 전체 오답노트 통계 화면(유형별·문법포인트별 빈도 Top5)을 자동으로 띄워주면 좋습니다."}};
+</script>
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Text-to-speech ---------------- */
+  let ttsWarned = false;
+  let ttsUnlocked = false;
+  function unlockTTS(){
+    // Some mobile browsers need a silent utterance on first user gesture to unlock audio.
+    if(ttsUnlocked || !('speechSynthesis' in window)) return;
+    try{
+      const warm = new SpeechSynthesisUtterance(" ");
+      warm.volume = 0;
+      window.speechSynthesis.speak(warm);
+      ttsUnlocked = true;
+    }catch(e){}
+  }
+  document.addEventListener("touchstart", unlockTTS, {once:true, passive:true});
+  document.addEventListener("click", unlockTTS, {once:true});
+
+  function speak(text){
+    if(!text) return;
+    if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === "undefined"){
+      if(!ttsWarned){
+        ttsWarned = true;
+        alert("이 화면에서는 음성 재생을 지원하지 않아요. 우측 상단 메뉴에서 '브라우저에서 열기'로 Safari/Chrome에서 열어보세요.");
+      }
+      return;
+    }
+    try{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-US";
+      u.rate = 0.92;
+      u.volume = 1;
+      let started = false;
+      u.onstart = ()=>{ started = true; };
+      u.onerror = ()=>{
+        if(!ttsWarned){
+          ttsWarned = true;
+          alert("음성 재생이 차단된 것 같아요. 이 페이지를 Safari나 Chrome 브라우저에서 직접 열어 다시 시도해보세요.");
+        }
+      };
+      window.speechSynthesis.speak(u);
+      // Fallback check: if nothing started within 1.2s, warn once.
+      setTimeout(()=>{
+        if(!started && !ttsWarned && !window.speechSynthesis.speaking){
+          ttsWarned = true;
+          alert("음성이 재생되지 않았어요. 이 페이지를 Safari나 Chrome 브라우저에서 직접 열어보시면 정상 작동해요.");
+        }
+      }, 1200);
+    }catch(e){
+      if(!ttsWarned){
+        ttsWarned = true;
+        alert("음성 재생 중 오류가 발생했어요. 브라우저에서 직접 열어 다시 시도해주세요.");
+      }
+    }
+  }
+  function makeSpeakBtn(text, extraClass){
+    const b = document.createElement("button");
+    b.className = "speak-btn" + (extraClass ? " "+extraClass : "");
+    b.type = "button";
+    b.textContent = "🔊";
+    b.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      unlockTTS();
+      speak(text);
+    });
+    return b;
+  }
+
+  /* ---------------- State / storage ---------------- */
+  const LS_KEY = "toeic30_state_v1";
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return { startDate:null, completedDays:{}, mistakes:[], vocabKnown:{}, examResults:{} };
+  }
+  function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  let state = loadState();
+
+  const dayKeys = Object.keys(TOEIC_DATA).sort();
+  const totalDays = dayKeys.length;
+
+  function todayIndex(){
+    if(!state.startDate) return null;
+    const start = new Date(state.startDate + "T00:00:00");
+    const now = new Date();
+    const diffDays = Math.floor((now - start) / 86400000);
+    let idx = diffDays + 1;
+    if(idx < 1) idx = 1;
+    if(idx > totalDays) idx = totalDays;
+    return idx;
+  }
+
+  function dayKeyFromNum(n){ return "day" + String(n).padStart(2,"0"); }
+
+  /* ---------------- Header ---------------- */
+  function renderHeader(){
+    const done = Object.keys(state.completedDays).length;
+    document.getElementById("hdrDayCount").innerHTML = (state.startDate ? todayIndex() : "–") + '<span class="of"> / 30</span>';
+    document.getElementById("hdrProgress").style.width = Math.round(done/totalDays*100) + "%";
+  }
+
+  /* ---------------- Tabs ---------------- */
+  const tabs = {};
+  let currentTab = "schedule";
+  let scheduleDetailDay = null;
+
+  document.querySelectorAll(".nav-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      currentTab = btn.dataset.tab;
+      scheduleDetailDay = null;
+      render();
+    });
+  });
+
+  function setActiveNav(){
+    document.querySelectorAll(".nav-btn").forEach(b=>{
+      b.classList.toggle("active", b.dataset.tab === currentTab);
+    });
+  }
+
+  function render(){
+    setActiveNav();
+    renderHeader();
+    const app = document.getElementById("app");
+    app.innerHTML = "";
+    if(currentTab === "schedule") renderSchedule(app);
+    else if(currentTab === "exam") renderExamTab(app);
+    else if(currentTab === "mistakes") renderMistakes(app);
+    else if(currentTab === "vocab") renderVocabTab(app);
+  }
+
+  /* ================= SCHEDULE TAB ================= */
+  function renderSchedule(app){
+    if(!state.startDate){
+      const div = document.createElement("div");
+      div.className = "start-prompt";
+      div.innerHTML = `
+        <div class="theme-line" style="margin-bottom:8px;">30일 학습을 시작할까요?</div>
+        <p>시작일을 기준으로 Day1부터 Day30까지 자동으로 배정됩니다.</p>
+        <button class="btn block" id="startTodayBtn">오늘부터 시작하기</button>
+      `;
+      app.appendChild(div);
+      document.getElementById("startTodayBtn").addEventListener("click", ()=>{
+        state.startDate = new Date().toISOString().slice(0,10);
+        saveState();
+        render();
+      });
+      const hasData = Object.keys(state.completedDays).length || state.mistakes.length || Object.keys(state.vocabKnown).length || Object.keys(state.examResults).length;
+      if(hasData){
+        const wipeBtn2 = document.createElement("button");
+        wipeBtn2.className = "btn outline red small";
+        wipeBtn2.textContent = "전체 학습 초기화";
+        wipeBtn2.addEventListener("click", ()=>{
+          if(confirm("완료 기록, 오답노트, 단어 학습 상태, 모의고사 결과가 모두 삭제됩니다. 계속할까요?")){
+            state = { startDate:null, completedDays:{}, mistakes:[], vocabKnown:{}, examResults:{} };
+            saveState();
+            render();
+          }
+        });
+        app.appendChild(wipeBtn2);
+      }
+      return;
+    }
+
+    if(scheduleDetailDay){
+      renderDayDetail(app, scheduleDetailDay);
+      return;
+    }
+
+    const h = document.createElement("h2");
+    h.className = "section-title";
+    h.textContent = "30일 스케줄";
+    app.appendChild(h);
+
+    const grid = document.createElement("div");
+    grid.className = "day-grid";
+    const tIdx = todayIndex();
+
+    dayKeys.forEach((key, i)=>{
+      const dayNum = i+1;
+      const data = TOEIC_DATA[key];
+      const tile = document.createElement("div");
+      let cls = "day-tile";
+      if(state.completedDays[key]) cls += " done";
+      if(dayNum === tIdx) cls += " today";
+      if(data.type && data.type.indexOf("복습") === 0) cls += " review";
+      if(data.type && data.type.indexOf("풀기") === 0) cls += " exam";
+      tile.className = cls;
+      let tag = "";
+      if(data.theme) tag = data.theme.split(" ")[0].slice(0,4);
+      else if(data.type) tag = data.type.split(" ")[0].slice(0,4);
+      tile.innerHTML = `<div class="num">${dayNum}</div><div class="tag">${tag}</div>`;
+      tile.addEventListener("click", ()=>{
+        scheduleDetailDay = key;
+        render();
+      });
+      grid.appendChild(tile);
+    });
+    app.appendChild(grid);
+
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "btn outline small";
+    resetBtn.textContent = "시작일 다시 설정";
+    resetBtn.addEventListener("click", ()=>{
+      if(confirm("시작일을 초기화할까요? 학습 기록은 유지됩니다.")){
+        state.startDate = null; saveState(); render();
+      }
+    });
+    app.appendChild(resetBtn);
+
+    const wipeBtn = document.createElement("button");
+    wipeBtn.className = "btn outline red small";
+    wipeBtn.style.marginLeft = "8px";
+    wipeBtn.textContent = "전체 학습 초기화";
+    wipeBtn.addEventListener("click", ()=>{
+      if(confirm("완료 기록, 오답노트, 단어 학습 상태, 모의고사 결과가 모두 삭제됩니다. 계속할까요?")){
+        if(confirm("정말로 초기화할까요? 되돌릴 수 없어요.")){
+          state = { startDate:null, completedDays:{}, mistakes:[], vocabKnown:{}, examResults:{} };
+          saveState();
+          render();
+        }
+      }
+    });
+    app.appendChild(wipeBtn);
+  }
+
+  function renderDayDetail(app, key){
+    const data = TOEIC_DATA[key];
+    const dayNum = parseInt(key.replace("day",""),10);
+
+    const back = document.createElement("div");
+    back.className = "day-detail-back";
+    back.textContent = "‹ 스케줄로 돌아가기";
+    back.addEventListener("click", ()=>{ scheduleDetailDay = null; render(); });
+    app.appendChild(back);
+
+    const h = document.createElement("h2");
+    h.className = "section-title";
+    h.textContent = "Day " + dayNum;
+    app.appendChild(h);
+
+    const themeBlock = document.createElement("div");
+    themeBlock.className = "block";
+    themeBlock.innerHTML = `
+      <div class="theme-line">${data.theme || data.type || ""}</div>
+      ${data.grammar_point ? `<div class="grammar-line">문법 포인트: ${data.grammar_point}</div>` : ""}
+      ${data.note ? `<div style="font-size:13px; color:var(--pencil); margin-top:8px; line-height:1.6;">${data.note}</div>` : ""}
+      ${data.condition_note ? `<div style="font-size:12.5px; color:var(--red); margin-top:8px;">${data.condition_note}</div>` : ""}
+    `;
+    app.appendChild(themeBlock);
+
+    // VOCAB
+    if(data.vocab && data.vocab.length){
+      const div = document.createElement("div");
+      div.className = "part-divider";
+      div.textContent = "단어 " + data.vocab.length + "개";
+      app.appendChild(div);
+      const block = document.createElement("div");
+      block.className = "block";
+      data.vocab.forEach((v, vi)=>{
+        const known = !!(state.vocabKnown[key+"_"+vi]);
+        const item = document.createElement("div");
+        item.className = "vocab-item";
+        const head = document.createElement("div");
+        head.className = "vocab-head";
+        head.innerHTML = `
+          <span class="vocab-word">${v.word}</span>
+          <span class="vocab-pos">${v.pos||""}</span>
+          <span class="vocab-meaning">${v.meaning}</span>
+        `;
+        head.appendChild(makeSpeakBtn(v.word, "speak-inline"));
+        item.appendChild(head);
+        if(v.collocation){
+          const c = document.createElement("div");
+          c.className = "vocab-colloc speak-row";
+          c.innerHTML = `<span>✎ ${v.collocation}</span>`;
+          c.appendChild(makeSpeakBtn(v.collocation));
+          item.appendChild(c);
+        }
+        if(v.memory_tip){
+          const t = document.createElement("div");
+          t.className = "vocab-tip";
+          t.textContent = "💡 " + v.memory_tip;
+          item.appendChild(t);
+        }
+        if(v.example){
+          const ex = document.createElement("div");
+          ex.className = "vocab-example speak-row";
+          ex.innerHTML = `<span>"${v.example}"</span>`;
+          ex.appendChild(makeSpeakBtn(v.example));
+          item.appendChild(ex);
+        }
+        block.appendChild(item);
+      });
+      app.appendChild(block);
+    }
+
+    // LC dialogue (day1-20 style)
+    if(data.lc_dialogue){
+      const div = document.createElement("div");
+      div.className = "part-divider";
+      div.textContent = "Listening";
+      app.appendChild(div);
+      app.appendChild(renderLC(data.lc_dialogue.script, data.lc_dialogue.questions, key+"_lc0"));
+    }
+    // LC array (mock exam days)
+    if(data.lc && data.lc.length){
+      const div = document.createElement("div");
+      div.className = "part-divider";
+      div.textContent = "Listening (" + data.lc.length + "문항)";
+      app.appendChild(div);
+      data.lc.forEach((item, li)=>{
+        app.appendChild(renderLC(item.script, [{q:item.q, choices:item.choices, answer:item.answer}], key+"_lc"+li));
+      });
+    }
+
+    // Part 5
+    if(data.part5 && data.part5.length){
+      const div = document.createElement("div");
+      div.className = "part-divider";
+      div.textContent = "Part 5 · 문법/어휘";
+      app.appendChild(div);
+      const block = document.createElement("div");
+      block.className = "block";
+      data.part5.forEach((q, qi)=>{
+        block.appendChild(renderChoiceQuestion({
+          sentence: q.sentence, choices: q.choices, answer: q.answer, explain: q.grammar_point
+        }, key+"_p5_"+qi, key, "Part5"));
+      });
+      app.appendChild(block);
+    }
+
+    // Part 6
+    if(data.part6){
+      const div = document.createElement("div");
+      div.className = "part-divider";
+      div.textContent = "Part 6 · 빈칸 채우기";
+      app.appendChild(div);
+      const block = document.createElement("div");
+      block.className = "block";
+      const pWrap = document.createElement("div");
+      pWrap.className = "speak-row";
+      pWrap.style.alignItems = "flex-start";
+      const p = document.createElement("div");
+      p.className = "q-passage";
+      p.style.flex = "1";
+      p.textContent = data.part6.passage;
+      pWrap.appendChild(p);
+      pWrap.appendChild(makeSpeakBtn(data.part6.passage));
+      block.appendChild(pWrap);
+      data.part6.blanks.forEach((b, bi)=>{
+        block.appendChild(renderChoiceQuestion({
+          sentence: "빈칸 (" + b.num + ")", choices: b.choices, answer: b.answer, explain: b.grammar_point
+        }, key+"_p6_"+bi, key, "Part6"));
+      });
+      app.appendChild(block);
+    }
+
+    // Part 7
+    if(data.part7){
+      const div = document.createElement("div");
+      div.className = "part-divider";
+      div.textContent = "Part 7 · 독해";
+      app.appendChild(div);
+      const block = document.createElement("div");
+      block.className = "block";
+      const pWrap = document.createElement("div");
+      pWrap.className = "speak-row";
+      pWrap.style.alignItems = "flex-start";
+      const p = document.createElement("div");
+      p.className = "q-passage";
+      p.style.flex = "1";
+      p.textContent = data.part7.passage;
+      pWrap.appendChild(p);
+      pWrap.appendChild(makeSpeakBtn(data.part7.passage));
+      block.appendChild(pWrap);
+      data.part7.questions.forEach((q, qi)=>{
+        block.appendChild(renderChoiceQuestion({
+          sentence: q.q, choices: q.choices, answer: q.answer, explain: q.paraphrase_note, isQ:true
+        }, key+"_p7_"+qi, key, "Part7"));
+      });
+      app.appendChild(block);
+    }
+
+    const completeBtn = document.createElement("button");
+    completeBtn.className = "btn block " + (state.completedDays[key] ? "outline" : "green");
+    completeBtn.textContent = state.completedDays[key] ? "완료 취소" : "Day " + dayNum + " 완료 표시";
+    completeBtn.addEventListener("click", ()=>{
+      if(state.completedDays[key]) delete state.completedDays[key];
+      else state.completedDays[key] = true;
+      saveState();
+      render();
+    });
+    app.appendChild(completeBtn);
+  }
+
+  function renderLC(script, questions, idPrefix){
+    const block = document.createElement("div");
+    block.className = "block";
+    const sWrap = document.createElement("div");
+    sWrap.className = "speak-row";
+    sWrap.style.alignItems = "flex-start";
+    const s = document.createElement("div");
+    s.className = "q-script";
+    s.style.flex = "1";
+    s.textContent = script;
+    sWrap.appendChild(s);
+    sWrap.appendChild(makeSpeakBtn(script));
+    block.appendChild(sWrap);
+    questions.forEach((q, qi)=>{
+      block.appendChild(renderChoiceQuestion({
+        sentence: q.q, choices: q.choices, answer: q.answer, isQ:true
+      }, idPrefix+"_"+qi, idPrefix, "LC"));
+    });
+    return block;
+  }
+
+  function renderChoiceQuestion(q, qid, dayKey, partLabel){
+    const wrap = document.createElement("div");
+    wrap.className = "q-block";
+    const textEl = document.createElement("div");
+    textEl.className = q.isQ ? "q-text" : "q-sentence";
+    textEl.textContent = q.sentence;
+    wrap.appendChild(textEl);
+
+    const choicesEl = document.createElement("div");
+    choicesEl.className = "choices";
+    let answered = false;
+
+    q.choices.forEach(choice=>{
+      const c = document.createElement("div");
+      c.className = "choice";
+      c.textContent = choice;
+      c.addEventListener("click", ()=>{
+        if(answered) return;
+        answered = true;
+        const isCorrect = choice === q.answer;
+        Array.from(choicesEl.children).forEach(ch=>{
+          ch.classList.add("disabled");
+          if(ch.textContent === q.answer) ch.classList.add("correct");
+        });
+        if(!isCorrect) c.classList.add("wrong");
+        if(q.explain){
+          explainEl.classList.add("show");
+        }
+        if(!isCorrect){
+          mistakeBtn.style.display = "inline-block";
+        }
+      });
+      choicesEl.appendChild(c);
+    });
+    wrap.appendChild(choicesEl);
+
+    const explainEl = document.createElement("div");
+    explainEl.className = "q-explain";
+    explainEl.textContent = q.explain || "";
+    wrap.appendChild(explainEl);
+
+    const mistakeBtn = document.createElement("button");
+    mistakeBtn.className = "btn small red save-mistake-btn";
+    mistakeBtn.textContent = "오답노트에 저장";
+    mistakeBtn.style.display = "none";
+    mistakeBtn.addEventListener("click", ()=>{
+      openMistakeForm(dayKey, partLabel, q.sentence, q.answer);
+    });
+    wrap.appendChild(mistakeBtn);
+
+    return wrap;
+  }
+
+  /* ================= EXAM (MOCK TEST) TAB ================= */
+  const examDays = dayKeys.filter(k => TOEIC_DATA[k].type && TOEIC_DATA[k].type.indexOf("풀기") === 0);
+  let examState = null; // {key, phase, secondsLeft, timerId}
+
+  function renderExamTab(app){
+    if(examState && examState.running){
+      renderExamRunning(app);
+      return;
+    }
+    const h = document.createElement("h2");
+    h.className = "section-title";
+    h.textContent = "실전모의고사";
+    app.appendChild(h);
+
+    if(!examDays.length){
+      app.innerHTML += `<div class="empty-state">모의고사 데이터가 없습니다.</div>`;
+      return;
+    }
+
+    examDays.forEach(key=>{
+      const data = TOEIC_DATA[key];
+      const dayNum = parseInt(key.replace("day",""),10);
+      const block = document.createElement("div");
+      block.className = "block";
+      const resultKey = key;
+      const result = state.examResults[resultKey];
+      block.innerHTML = `
+        <div class="theme-line">Day ${dayNum}</div>
+        <div style="font-size:13px; color:var(--pencil); margin:4px 0 10px;">${data.type}</div>
+        <div style="font-size:12px; color:var(--pencil-light); margin-bottom:10px;">LC ${data.timer.lc_minutes}분 · RC ${data.timer.rc_minutes}분 · 중간 정지 없이 진행</div>
+        ${result ? `<div style="font-size:13px; color:var(--green); margin-bottom:10px;">최근 결과: ${result.correct}/${result.total} 정답</div>` : ""}
+        <button class="btn block" data-key="${key}">${result ? "다시 응시하기" : "응시 시작"}</button>
+      `;
+      block.querySelector("button").addEventListener("click", ()=>{
+        startExam(key);
+      });
+      app.appendChild(block);
+    });
+  }
+
+  function startExam(key){
+    const data = TOEIC_DATA[key];
+    examState = {
+      key,
+      phase: "lc",
+      secondsLeft: data.timer.lc_minutes * 60,
+      running: true,
+      answers: {},
+      currentQ: 0
+    };
+    tickExam();
+    render();
+  }
+
+  let examTimerId = null;
+  function tickExam(){
+    if(examTimerId) clearInterval(examTimerId);
+    examTimerId = setInterval(()=>{
+      if(!examState || !examState.running) { clearInterval(examTimerId); return; }
+      examState.secondsLeft--;
+      if(examState.secondsLeft <= 0){
+        advanceExamPhase();
+      }
+      if(currentTab === "exam") updateTimerDisplay();
+    }, 1000);
+  }
+
+  function advanceExamPhase(){
+    const data = TOEIC_DATA[examState.key];
+    if(examState.phase === "lc"){
+      examState.phase = "rc";
+      examState.secondsLeft = data.timer.rc_minutes * 60;
+    } else {
+      finishExam();
+    }
+  }
+
+  function finishExam(){
+    clearInterval(examTimerId);
+    const data = TOEIC_DATA[examState.key];
+    let correct = 0, total = 0;
+    (data.lc||[]).forEach((q,i)=>{
+      total++;
+      if(examState.answers["lc"+i] === q.answer) correct++;
+    });
+    (data.part5||[]).forEach((q,i)=>{
+      total++;
+      if(examState.answers["p5"+i] === q.answer) correct++;
+    });
+    if(data.part6){
+      data.part6.blanks.forEach((b,i)=>{
+        total++;
+        if(examState.answers["p6"+i] === b.answer) correct++;
+      });
+    }
+    if(data.part7){
+      data.part7.questions.forEach((q,i)=>{
+        total++;
+        if(examState.answers["p7"+i] === q.answer) correct++;
+      });
+    }
+    state.examResults[examState.key] = {correct, total, date:new Date().toISOString()};
+    saveState();
+    examState.running = false;
+    examState.done = true;
+    render();
+  }
+
+  function renderExamRunning(app){
+    const data = TOEIC_DATA[examState.key];
+    if(examState.done){
+      const r = state.examResults[examState.key];
+      app.innerHTML = `
+        <h2 class="section-title">모의고사 결과</h2>
+        <div class="block" style="text-align:center;">
+          <div class="theme-line">${r.correct} / ${r.total} 정답</div>
+          <p style="color:var(--pencil); font-size:13px; margin-top:10px;">채점 후 복습법 5단계를 적용하세요: 유형별 분류 → 오답 해설 정독 → 다음날 재확인 → 문법 복귀 → 정리.</p>
+        </div>
+        <button class="btn block outline" id="backToExamList">모의고사 목록으로</button>
+      `;
+      document.getElementById("backToExamList").addEventListener("click", ()=>{
+        examState = null; render();
+      });
+      return;
+    }
+
+    const timerDiv = document.createElement("div");
+    timerDiv.className = "timer-display";
+    timerDiv.innerHTML = `
+      <div class="phase">${examState.phase === "lc" ? "LISTENING" : "READING"}</div>
+      <div class="time" id="examTimeText"></div>
+      <div style="font-size:11px; color:#C7BFA8;">중간에 멈출 수 없습니다. 실제 시험처럼 응시하세요.</div>
+    `;
+    app.appendChild(timerDiv);
+    updateTimerDisplay();
+
+    const questions = buildExamQuestionList(data, examState.phase);
+    questions.forEach(item=>{
+      const block = document.createElement("div");
+      block.className = "block";
+      if(item.passage){
+        const pWrap = document.createElement("div");
+        pWrap.className = "speak-row";
+        pWrap.style.alignItems = "flex-start";
+        const p = document.createElement("div");
+        p.className = "q-passage";
+        p.style.flex = "1";
+        p.textContent = item.passage;
+        pWrap.appendChild(p);
+        pWrap.appendChild(makeSpeakBtn(item.passage));
+        block.appendChild(pWrap);
+      }
+      if(item.script){
+        const sWrap = document.createElement("div");
+        sWrap.className = "speak-row";
+        sWrap.style.alignItems = "flex-start";
+        const s = document.createElement("div");
+        s.className = "q-script";
+        s.style.flex = "1";
+        s.textContent = item.script;
+        sWrap.appendChild(s);
+        sWrap.appendChild(makeSpeakBtn(item.script));
+        block.appendChild(sWrap);
+      }
+      const t = document.createElement("div");
+      t.className = "q-text";
+      t.textContent = item.text;
+      block.appendChild(t);
+      const choicesEl = document.createElement("div");
+      choicesEl.className = "choices";
+      item.choices.forEach(choice=>{
+        const c = document.createElement("div");
+        c.className = "choice";
+        if(examState.answers[item.id] === choice) c.classList.add("wrong"); // will re-style below via selection marker
+        c.textContent = choice;
+        if(examState.answers[item.id] === choice){
+          c.style.borderColor = "var(--ochre)";
+          c.style.background = "#F3E6CB";
+          c.classList.remove("wrong");
+        }
+        c.addEventListener("click", ()=>{
+          examState.answers[item.id] = choice;
+          render();
+        });
+        choicesEl.appendChild(c);
+      });
+      block.appendChild(choicesEl);
+      app.appendChild(block);
+    });
+
+    const submitBtn = document.createElement("button");
+    submitBtn.className = "btn block";
+    submitBtn.textContent = examState.phase === "lc" ? "Listening 제출 → Reading 시작" : "제출하고 채점하기";
+    submitBtn.addEventListener("click", ()=>{
+      if(confirm("제출하시겠습니까? 제출 후 되돌릴 수 없습니다.")){
+        advanceExamPhase();
+        render();
+      }
+    });
+    app.appendChild(submitBtn);
+  }
+
+  function buildExamQuestionList(data, phase){
+    const list = [];
+    if(phase === "lc"){
+      (data.lc||[]).forEach((q,i)=>{
+        list.push({id:"lc"+i, script:q.script, text:q.q, choices:q.choices});
+      });
+    } else {
+      (data.part5||[]).forEach((q,i)=>{
+        list.push({id:"p5"+i, text:q.sentence, choices:q.choices});
+      });
+      if(data.part6){
+        data.part6.blanks.forEach((b,i)=>{
+          list.push({id:"p6"+i, passage: (i===0?data.part6.passage:null), text:"빈칸 ("+b.num+")", choices:b.choices});
+        });
+      }
+      if(data.part7){
+        data.part7.questions.forEach((q,i)=>{
+          list.push({id:"p7"+i, passage:(i===0?data.part7.passage:null), text:q.q, choices:q.choices});
+        });
+      }
+    }
+    return list;
+  }
+
+  function updateTimerDisplay(){
+    const el = document.getElementById("examTimeText");
+    if(!el || !examState) return;
+    const m = Math.floor(examState.secondsLeft/60);
+    const s = examState.secondsLeft%60;
+    el.textContent = String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+    el.classList.toggle("warn", examState.secondsLeft <= 60);
+  }
+
+  /* ================= MISTAKE NOTEBOOK TAB ================= */
+  let mistakeFilter = "all";
+  const MISTAKE_TYPES = ["품사자리","시제","수동태","접속사","전치사","관계사","준동사","비교급","어휘","독해시간부족","리스닝놓침","기타"];
+
+  function openMistakeForm(dayKey, part, question, answer){
+    const type = prompt("문제 유형을 선택해 입력하세요 (예: 품사자리 / 시제 / 어휘 / 독해시간부족 등):", "기타");
+    if(type === null) return;
+    const reason = prompt("틀린 이유를 한 줄로 적어주세요:", "");
+    if(reason === null) return;
+    state.mistakes.push({
+      id: Date.now(),
+      date: new Date().toISOString().slice(0,10),
+      source: dayKey + " · " + part,
+      question: question,
+      type: type || "기타",
+      reason: reason || "",
+      answerBasis: answer,
+      guessedRight: false
+    });
+    saveState();
+    alert("오답노트에 저장했어요.");
+  }
+
+  function renderMistakes(app){
+    const h = document.createElement("h2");
+    h.className = "section-title";
+    h.textContent = "오답노트";
+    app.appendChild(h);
+
+    if(!state.mistakes.length){
+      app.innerHTML += `<div class="empty-state">아직 저장된 오답이 없어요.<br>문제를 풀다 틀리면 "오답노트에 저장" 버튼으로 여기에 모아보세요.</div>`;
+      return;
+    }
+
+    // Top types this week-ish (all time, simplified)
+    const counts = {};
+    state.mistakes.forEach(m=>{ counts[m.type] = (counts[m.type]||0)+1; });
+    const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const topDiv = document.createElement("div");
+    topDiv.className = "top-types";
+    topDiv.innerHTML = `<div class="label">가장 많이 틀린 유형 TOP ${sorted.length}</div>` +
+      sorted.map(([t,c])=>`<div class="top-type-row"><span>${t}</span><span class="count">${c}회</span></div>`).join("");
+    app.appendChild(topDiv);
+
+    const filterRow = document.createElement("div");
+    filterRow.className = "filter-row";
+    const allTypes = ["all", ...new Set(state.mistakes.map(m=>m.type))];
+    allTypes.forEach(t=>{
+      const chip = document.createElement("div");
+      chip.className = "filter-chip" + (mistakeFilter===t?" active":"");
+      chip.textContent = t === "all" ? "전체" : t;
+      chip.addEventListener("click", ()=>{ mistakeFilter = t; render(); });
+      filterRow.appendChild(chip);
+    });
+    app.appendChild(filterRow);
+
+    const filtered = mistakeFilter === "all" ? state.mistakes : state.mistakes.filter(m=>m.type===mistakeFilter);
+    // group by type
+    const groups = {};
+    filtered.forEach(m=>{
+      groups[m.type] = groups[m.type] || [];
+      groups[m.type].push(m);
+    });
+    Object.entries(groups).forEach(([type, items])=>{
+      items.forEach(m=>{
+        const card = document.createElement("div");
+        card.className = "mistake-card";
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="mistake-type-tag">${m.type}</span>
+            <span style="font-size:11px; color:var(--pencil-light); font-family:var(--mono);">${m.date}</span>
+          </div>
+          <dl class="mistake-grid">
+            <dt>출처</dt><dd>${m.source}</dd>
+            <dt>문제</dt><dd>${m.question}</dd>
+            <dt>틀린 이유</dt><dd>${m.reason || "-"}</dd>
+            <dt>정답 근거</dt><dd>${m.answerBasis}</dd>
+          </dl>
+          <button class="btn small outline" style="margin-top:10px;" data-id="${m.id}">삭제</button>
+        `;
+        card.querySelector("button").addEventListener("click", ()=>{
+          state.mistakes = state.mistakes.filter(x=>x.id !== m.id);
+          saveState(); render();
+        });
+        app.appendChild(card);
+      });
+    });
+  }
+
+  /* ================= VOCAB STUDY TAB ================= */
+  let vocabDayFilter = "all";
+  let vocabDeck = [];
+  let vocabIdx = 0;
+  let vocabFlipped = false;
+  let vocabOnlyUnknown = false;
+
+  function buildVocabDeck(){
+    let items = [];
+    dayKeys.forEach(key=>{
+      const data = TOEIC_DATA[key];
+      if(!data.vocab) return;
+      if(vocabDayFilter !== "all" && key !== vocabDayFilter) return;
+      data.vocab.forEach((v, vi)=>{
+        const id = key+"_"+vi;
+        if(vocabOnlyUnknown && state.vocabKnown[id]) return;
+        items.push({...v, id, dayKey:key});
+      });
+    });
+    vocabDeck = items;
+    if(vocabIdx >= vocabDeck.length) vocabIdx = 0;
+  }
+
+  function renderVocabTab(app){
+    const h = document.createElement("h2");
+    h.className = "section-title";
+    h.textContent = "단어 학습";
+    app.appendChild(h);
+
+    const daySelect = document.createElement("select");
+    daySelect.innerHTML = `<option value="all">전체 Day</option>` +
+      dayKeys.filter(k=>TOEIC_DATA[k].vocab && TOEIC_DATA[k].vocab.length).map(k=>{
+        const n = parseInt(k.replace("day",""),10);
+        return `<option value="${k}" ${vocabDayFilter===k?"selected":""}>Day ${n}</option>`;
+      }).join("");
+    daySelect.value = vocabDayFilter;
+    daySelect.addEventListener("change", ()=>{
+      vocabDayFilter = daySelect.value; vocabIdx = 0; vocabFlipped = false; render();
+    });
+    app.appendChild(daySelect);
+
+    const toggleRow = document.createElement("div");
+    toggleRow.style.marginBottom = "12px";
+    const toggleBtn = document.createElement("button");
+    toggleBtn.className = "btn small " + (vocabOnlyUnknown ? "" : "outline");
+    toggleBtn.textContent = vocabOnlyUnknown ? "모르는 단어만 보는 중" : "모르는 단어만 보기";
+    toggleBtn.addEventListener("click", ()=>{
+      vocabOnlyUnknown = !vocabOnlyUnknown; vocabIdx = 0; vocabFlipped = false; render();
+    });
+    toggleRow.appendChild(toggleBtn);
+    app.appendChild(toggleRow);
+
+    buildVocabDeck();
+
+    if(!vocabDeck.length){
+      app.innerHTML += `<div class="empty-state">표시할 단어가 없어요. 필터를 확인해보세요.</div>`;
+      return;
+    }
+
+    const prog = document.createElement("div");
+    prog.className = "fc-progress";
+    prog.textContent = (vocabIdx+1) + " / " + vocabDeck.length;
+    app.appendChild(prog);
+
+    const v = vocabDeck[vocabIdx];
+    const card = document.createElement("div");
+    card.className = "flashcard" + (vocabFlipped ? " flipped" : "");
+    card.innerHTML = `
+      <div class="fc-front">
+        <div class="fc-word">${v.word}</div>
+        <div class="fc-pos">${v.pos||""}</div>
+        <div class="fc-hint">탭해서 뜻 보기</div>
+      </div>
+      <div class="fc-back">
+        <div class="fc-meaning">${v.meaning}</div>
+        ${v.collocation ? `<div class="fc-colloc">✎ ${v.collocation}</div>` : ""}
+        ${v.memory_tip ? `<div class="fc-tip">💡 ${v.memory_tip}</div>` : ""}
+        ${v.example ? `<div class="fc-example">"${v.example}"</div>` : ""}
+      </div>
+    `;
+    card.addEventListener("click", ()=>{ vocabFlipped = !vocabFlipped; render(); });
+    app.appendChild(card);
+
+    const speakRow = document.createElement("div");
+    speakRow.style.display = "flex";
+    speakRow.style.justifyContent = "center";
+    speakRow.style.gap = "10px";
+    speakRow.style.marginTop = "10px";
+    const speakWordBtn = document.createElement("button");
+    speakWordBtn.className = "btn outline small";
+    speakWordBtn.textContent = "🔊 단어 듣기";
+    speakWordBtn.addEventListener("click", (e)=>{ e.stopPropagation(); speak(v.word); });
+    speakRow.appendChild(speakWordBtn);
+    if(v.example){
+      const speakExBtn = document.createElement("button");
+      speakExBtn.className = "btn outline small";
+      speakExBtn.textContent = "🔊 예문 듣기";
+      speakExBtn.addEventListener("click", (e)=>{ e.stopPropagation(); speak(v.example); });
+      speakRow.appendChild(speakExBtn);
+    }
+    app.appendChild(speakRow);
+
+    const controls = document.createElement("div");
+    controls.className = "fc-controls";
+    controls.innerHTML = `
+      <button class="btn outline" id="vocabKnowBtn">안다 ✓</button>
+      <button class="btn outline red" id="vocabDontKnowBtn">모른다 ✕</button>
+    `;
+    app.appendChild(controls);
+
+    document.getElementById("vocabKnowBtn").addEventListener("click", ()=>{
+      state.vocabKnown[v.id] = true;
+      saveState();
+      nextVocab();
+    });
+    document.getElementById("vocabDontKnowBtn").addEventListener("click", ()=>{
+      delete state.vocabKnown[v.id];
+      saveState();
+      nextVocab();
+    });
+
+    const navRow = document.createElement("div");
+    navRow.style.display = "flex";
+    navRow.style.gap = "10px";
+    navRow.style.marginTop = "10px";
+    navRow.innerHTML = `<button class="btn outline small" id="vocabPrev" style="flex:1;">이전</button><button class="btn outline small" id="vocabNext" style="flex:1;">다음</button>`;
+    app.appendChild(navRow);
+    document.getElementById("vocabPrev").addEventListener("click", ()=>{
+      vocabIdx = (vocabIdx - 1 + vocabDeck.length) % vocabDeck.length;
+      vocabFlipped = false; render();
+    });
+    document.getElementById("vocabNext").addEventListener("click", nextVocab);
+  }
+
+  function nextVocab(){
+    vocabIdx = (vocabIdx + 1) % vocabDeck.length;
+    vocabFlipped = false;
+    render();
+  }
+
+  /* ---------------- init ---------------- */
+  render();
+})();
+</script>
+</body>
+</html>
