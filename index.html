@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TOEIC 30DAY — 300점에서 900점으로</title>
 <style>
   :root{
@@ -409,6 +409,27 @@
     border-bottom:1px solid var(--rule);
     padding-bottom:4px;
   }
+
+  /* 읽기 쉬운 학습 화면 */
+  :root{--paper:#f2f3f5;--card:#fff;--ink:#152239;--pencil:#303a49;--pencil-light:#505d70;--rule:#aeb8c6;--red:#9c2d24;--green:#216044;}
+  body{font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h2.section-title,.theme-line{font-family:var(--sans);font-weight:750;}
+  h2.section-title{font-size:21px;}
+  .theme-line{font-size:19px;}
+  .ticket-header .brand small,.ticket-header .day-count .of{color:#fff;font-size:13px;}
+  .day-tile .tag{font-size:12px;color:#344256;}
+  .day-tile.done .tag{color:#fff;}
+  .part-divider{font-family:var(--sans);font-size:16px;font-weight:750;letter-spacing:0;color:#263e61;scroll-margin-top:76px;}
+  .vocab-word,.vocab-meaning,.q-text,.q-sentence,.q-passage,.q-script,.choice{font-size:16px;line-height:1.7;}
+  .vocab-word{font-size:20.8px;}
+  .vocab-colloc,.vocab-tip,.vocab-example,.grammar-line,.q-explain{font-size:15px;line-height:1.7;}
+  .btn.small{font-size:14px;}
+  .block p[style*="font-size"],.block div[style*="font-size"]{font-size:15px !important;}
+  .study-tabs{position:sticky;top:0;z-index:20;display:flex;gap:6px;overflow-x:auto;padding:10px 0;background:var(--paper);border-bottom:1px solid var(--rule);margin:0 0 14px;}
+  .study-tabs button{flex:0 0 auto;min-height:44px;padding:8px 14px;background:#fff;border:1px solid #8795aa;border-radius:7px;color:#172c49;font-size:15px;font-weight:700;cursor:pointer;}
+  .study-tabs button:focus-visible,.btn:focus-visible{outline:3px solid #eaa92b;outline-offset:2px;}
+  .study-tabs button:active{background:#dbe8fb;}
+
 </style>
 </head>
 <body>
@@ -426,7 +447,7 @@
 
   <div class="ticket-header">
     <div class="top-row">
-      <div class="brand">TOEIC 30<small>300점 → 900점 독학 프로젝트</small></div>
+      <div class="brand">TOEIC 30<small>매일 문제 풀이와 오답 복습</small></div>
       <div class="day-count" id="hdrDayCount">–<span class="of"> / 30</span></div>
     </div>
     <div class="progress-rule"><div class="fill" id="hdrProgress"></div></div>
@@ -594,7 +615,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
       `;
       app.appendChild(div);
       document.getElementById("startTodayBtn").addEventListener("click", ()=>{
-        state.startDate = new Date().toISOString().slice(0,10);
+        state.startDate = new Date(Date.now() - new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
         saveState();
         render();
       });
@@ -620,6 +641,17 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
       return;
     }
 
+    const today = dayKeyFromNum(todayIndex());
+    const routine = document.createElement("div");
+    routine.className = "block";
+    routine.innerHTML = `<div class="theme-line">오늘의 점수 향상 루틴</div>
+      <p style="line-height:1.8;font-size:14px">① 오답 다시 풀기 10분 → ② 오늘의 듣기와 문제 풀이 20분 → ③ 틀린 근거 확인 15분 → ④ 모르는 단어 회상 10분</p>
+      <p style="font-size:12px;color:var(--pencil)">시간은 권장량입니다. 모의고사 날에는 응시 후 오답을 먼저 복습하세요. 점수 상승 폭은 현재 실력과 학습량에 따라 달라집니다.</p>
+      <button class="btn block" id="goToday">Day ${todayIndex()} 학습 시작</button>
+      <button class="btn block outline" id="goMistakes">오답 ${state.mistakes.length}개 복습</button>`;
+    app.appendChild(routine);
+    routine.querySelector("#goToday").onclick = ()=>{scheduleDetailDay=today;render();};
+    routine.querySelector("#goMistakes").onclick = ()=>{currentTab="mistakes";render();};
     const h = document.createElement("h2");
     h.className = "section-title";
     h.textContent = "30일 스케줄";
@@ -692,6 +724,25 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     h.textContent = "Day " + dayNum;
     app.appendChild(h);
 
+    const tabs = document.createElement("nav");
+    tabs.className = "study-tabs";
+    tabs.setAttribute("aria-label", "학습 영역 바로가기");
+    const sections = [
+      ["단어", "study-vocab", data.vocab && data.vocab.length],
+      ["듣기", "study-listening", data.lc_dialogue || (data.lc && data.lc.length)],
+      ["문법", "study-grammar", data.part5 && data.part5.length],
+      ["빈칸", "study-part6", data.part6],
+      ["독해", "study-reading", data.part7]
+    ];
+    sections.filter(([, , available]) => available).forEach(([label, id])=>{
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      button.addEventListener("click", ()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth", block:"start"}));
+      tabs.appendChild(button);
+    });
+    if(tabs.childElementCount) app.appendChild(tabs);
+
     const themeBlock = document.createElement("div");
     themeBlock.className = "block";
     themeBlock.innerHTML = `
@@ -702,10 +753,15 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     `;
     app.appendChild(themeBlock);
 
+    const guide = document.createElement("div");
+    guide.className = "block";
+    guide.innerHTML = `<div class="theme-line">이 순서로 공부하세요</div><p style="line-height:1.8;font-size:14px">듣기: 대본을 보지 않고 듣고 답하기 → 대본 확인 후 놓친 표현 다시 듣기<br>Part 5: 시간 재고 풀기 → 정답 근거를 말하기<br>Part 7: 문제를 먼저 읽고 지문에서 근거 찾기<br>단어: 뜻을 가리고 떠올린 뒤 모르는 단어를 반복하기</p>`;
+    app.appendChild(guide);
     // VOCAB
     if(data.vocab && data.vocab.length){
       const div = document.createElement("div");
       div.className = "part-divider";
+      div.id = "study-vocab";
       div.textContent = "단어 " + data.vocab.length + "개";
       app.appendChild(div);
       const block = document.createElement("div");
@@ -752,6 +808,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     if(data.lc_dialogue){
       const div = document.createElement("div");
       div.className = "part-divider";
+      div.id = "study-listening";
       div.textContent = "Listening";
       app.appendChild(div);
       app.appendChild(renderLC(data.lc_dialogue.script, data.lc_dialogue.questions, key+"_lc0"));
@@ -760,6 +817,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     if(data.lc && data.lc.length){
       const div = document.createElement("div");
       div.className = "part-divider";
+      div.id = "study-listening";
       div.textContent = "Listening (" + data.lc.length + "문항)";
       app.appendChild(div);
       data.lc.forEach((item, li)=>{
@@ -771,6 +829,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     if(data.part5 && data.part5.length){
       const div = document.createElement("div");
       div.className = "part-divider";
+      div.id = "study-grammar";
       div.textContent = "Part 5 · 문법/어휘";
       app.appendChild(div);
       const block = document.createElement("div");
@@ -787,6 +846,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     if(data.part6){
       const div = document.createElement("div");
       div.className = "part-divider";
+      div.id = "study-part6";
       div.textContent = "Part 6 · 빈칸 채우기";
       app.appendChild(div);
       const block = document.createElement("div");
@@ -813,6 +873,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     if(data.part7){
       const div = document.createElement("div");
       div.className = "part-divider";
+      div.id = "study-reading";
       div.textContent = "Part 7 · 독해";
       app.appendChild(div);
       const block = document.createElement("div");
@@ -857,7 +918,12 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
     s.className = "q-script";
     s.style.flex = "1";
     s.textContent = script;
-    sWrap.appendChild(s);
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.textContent = "답한 뒤 대본 확인";
+    details.appendChild(summary);
+    details.appendChild(s);
+    sWrap.appendChild(details);
     sWrap.appendChild(makeSpeakBtn(script));
     block.appendChild(sWrap);
     questions.forEach((q, qi)=>{
@@ -926,14 +992,15 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
   let examState = null; // {key, phase, secondsLeft, timerId}
 
   function renderExamTab(app){
-    if(examState && examState.running){
+    if(examState && (examState.running || examState.done)){
       renderExamRunning(app);
       return;
     }
     const h = document.createElement("h2");
     h.className = "section-title";
-    h.textContent = "실전모의고사";
+    h.textContent = "축소 모의 연습";
     app.appendChild(h);
+    const notice = document.createElement("p"); notice.style.fontSize="13px"; notice.style.lineHeight="1.6"; notice.textContent="기존 축소 문항으로 시간과 풀이를 연습합니다. 실제 시험의 문항 수·음원과 다르며 정답 수는 TOEIC 환산 점수가 아닙니다."; app.appendChild(notice);
 
     if(!examDays.length){
       app.innerHTML += `<div class="empty-state">모의고사 데이터가 없습니다.</div>`;
@@ -983,6 +1050,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
       examState.secondsLeft--;
       if(examState.secondsLeft <= 0){
         advanceExamPhase();
+        if(currentTab === "exam" && examState.running) render();
       }
       if(currentTab === "exam") updateTimerDisplay();
     }, 1000);
@@ -1022,7 +1090,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
         if(examState.answers["p7"+i] === q.answer) correct++;
       });
     }
-    state.examResults[examState.key] = {correct, total, date:new Date().toISOString()};
+    state.examResults[examState.key] = {correct, total, date:new Date().toISOString(), answers:{...examState.answers}};
     saveState();
     examState.running = false;
     examState.done = true;
@@ -1041,6 +1109,22 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
         </div>
         <button class="btn block outline" id="backToExamList">모의고사 목록으로</button>
       `;
+      const review = document.createElement("div");
+      review.innerHTML = '<h3 class="section-title">틀린 문제와 정답 근거</h3><p style="font-size:13px">선택하지 않은 문제도 복습에 포함됩니다. 음성은 기기별로 달라지는 자동 음성입니다.</p>';
+      const all = [...buildExamQuestionList(data, "lc"), ...buildExamQuestionList(data, "rc")];
+      const sources = [...(data.lc||[]), ...(data.part5||[]), ...((data.part6||{}).blanks||[]), ...((data.part7||{}).questions||[])];
+      all.forEach((item,i)=>{
+        const source = sources[i];
+        if(r.answers[item.id] === source.answer) return;
+        const card = document.createElement("div"); card.className="block";
+        const title = document.createElement("strong"); title.textContent=item.text; card.appendChild(title);
+        const info = document.createElement("p"); info.style.lineHeight="1.7";
+        info.textContent = "내 답: " + (r.answers[item.id] || "미응답") + " / 정답: " + source.answer;
+        card.appendChild(info);
+        const basis = document.createElement("p"); basis.textContent = source.grammar_point || source.paraphrase_note || (item.script ? "대본: " + item.script : "지문에서 정답의 근거를 찾아보세요."); card.appendChild(basis);
+        review.appendChild(card);
+      });
+      app.insertBefore(review, document.getElementById("backToExamList"));
       document.getElementById("backToExamList").addEventListener("click", ()=>{
         examState = null; render();
       });
@@ -1080,7 +1164,7 @@ const TOEIC_DATA = {"day01": {"theme": "사무실 일반", "grammar_point": "품
         const s = document.createElement("div");
         s.className = "q-script";
         s.style.flex = "1";
-        s.textContent = item.script;
+        s.textContent = "대본은 제출 후 확인하세요. 음성은 기기에서 생성됩니다.";
         sWrap.appendChild(s);
         sWrap.appendChild(makeSpeakBtn(item.script));
         block.appendChild(sWrap);
